@@ -1,10 +1,10 @@
 # -*- cmake -*-
 
+project(lscript_compile)
+
 include(00-Common)
 include(LLCommon)
 include(LLMath)
-include(LLMessage)
-include(LLInventory)
 include(LLPrimitive)
 include(LScript)
 
@@ -155,3 +155,13 @@ if (DARWIN)
 endif (DARWIN)
 
 add_library (lscript_compile ${lscript_compile_SOURCE_FILES})
+
+target_link_libraries(lscript_compile
+        llinventory
+        llmessage
+        llmath
+        llfilesystem
+        llprimitive
+        llcommon
+        lscript
+        )

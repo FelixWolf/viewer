@@ -1,5 +1,7 @@
 # -*- cmake -*-
 
+project(lscript_library)
+
 include(00-Common)
 include(LLCommon)
 include(LLMath)
@@ -33,3 +35,9 @@ include_directories(SYSTEM
     )
 
 add_library (lscript_library ${lscript_library_SOURCE_FILES})
+
+target_link_libraries(lscript_library
+        llmath
+        llcommon
+        lscript
+        )
