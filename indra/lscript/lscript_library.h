@@ -38,6 +38,7 @@ class LLScriptLibData;
 class LLScriptLibraryFunction
 {
 public:
+    LLScriptLibraryFunction();
     LLScriptLibraryFunction(F32 eu, F32 st, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &), const char *name, const char *ret_type, const char *args, BOOL god_only = FALSE);
     ~LLScriptLibraryFunction();
 
@@ -59,6 +60,7 @@ public:
     void init();
 
     void addFunction(F32 eu, F32 st, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &), const char *name, const char *ret_type, const char *args, BOOL god_only = FALSE);
+    void dangerousAddFunction(U32 id, const char *name, const char *ret_type, const char *args, F32 eu, F32 st, F32 mst, BOOL god_only);
     void assignExec(const char *name, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &));
 
     std::vector<LLScriptLibraryFunction>    mFunctions;
@@ -424,4 +426,4 @@ public:
 
 extern LLScriptLibrary gScriptLibrary;
 
-#endif
+#endif // LL_LSCRIPT_LIBRARY_H

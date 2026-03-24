@@ -936,6 +936,220 @@ public:
     LLScriptIdentifier  *mNumber;
 };
 
+class LLScriptTransactionResultEvent : public LLScriptEvent
+{
+public:
+    LLScriptTransactionResultEvent(S32 line, S32 col,
+        LLScriptIdentifier *id,
+        LLScriptIdentifier *success,
+        LLScriptIdentifier *data)
+        : LLScriptEvent(line, col, LSTT_TRANSACTION_RESULT),
+         mID(id), mSuccess(success), mData(data)
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass,
+        LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope,
+        LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+        LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap,
+        S32 stacksize, LLScriptScopeEntry *entry,
+        S32 entrycount, LLScriptLibData **ldata);
+
+    S32 getSize();
+
+    LLScriptIdentifier *mID;
+    LLScriptIdentifier *mSuccess;
+    LLScriptIdentifier *mData;
+};
+
+class LLScriptPathUpdateEvent : public LLScriptEvent
+{
+public:
+    LLScriptPathUpdateEvent(S32 line, S32 col,
+        LLScriptIdentifier *type,
+        LLScriptIdentifier *reserved)
+        : LLScriptEvent(line, col, LSTT_PATH_UPDATE),
+         mType(type), mReserved(reserved)
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass,
+        LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope,
+        LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+        LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap,
+        S32 stacksize, LLScriptScopeEntry *entry,
+        S32 entrycount, LLScriptLibData **ldata);
+
+    S32 getSize();
+
+    LLScriptIdentifier *mType;
+    LLScriptIdentifier *mReserved;
+};
+
+class LLScriptEXPEvent : public LLScriptEvent
+{
+public:
+    LLScriptEXPEvent(S32 line, S32 col,
+        LLScriptIdentifier *agent_id)
+        : LLScriptEvent(line, col, LSTT_EXPERIENCE_PERMISSIONS),
+         mAgentId(agent_id)
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass,
+        LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope,
+        LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+        LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap,
+        S32 stacksize, LLScriptScopeEntry *entry,
+        S32 entrycount, LLScriptLibData **ldata);
+
+    S32 getSize();
+
+    LLScriptIdentifier *mAgentId;
+};
+
+class LLScriptEXPDeniedEvent : public LLScriptEvent
+{
+public:
+    LLScriptEXPDeniedEvent(S32 line, S32 col,
+        LLScriptIdentifier *agent_id,
+        LLScriptIdentifier *reason)
+        : LLScriptEvent(line, col, LSTT_EXPERIENCE_PERMISSIONS_DENIED),
+         mAgentId(agent_id), mReason(reason)
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass,
+        LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope,
+        LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+        LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap,
+        S32 stacksize, LLScriptScopeEntry *entry,
+        S32 entrycount, LLScriptLibData **ldata);
+
+    S32 getSize();
+
+    LLScriptIdentifier *mAgentId;
+    LLScriptIdentifier *mReason;
+};
+
+class LLScriptLinksetDataEvent : public LLScriptEvent
+{
+public:
+    LLScriptLinksetDataEvent(S32 line, S32 col,
+        LLScriptIdentifier *action,
+        LLScriptIdentifier *name,
+        LLScriptIdentifier *value)
+        : LLScriptEvent(line, col, LSTT_LINKSET_DATA),
+         mAction(action), mName(name), mValue(value)
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass,
+        LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope,
+        LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+        LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap,
+        S32 stacksize, LLScriptScopeEntry *entry,
+        S32 entrycount, LLScriptLibData **ldata);
+
+    S32 getSize();
+
+    LLScriptIdentifier *mAction;
+    LLScriptIdentifier *mName;
+    LLScriptIdentifier *mValue;
+};
+
+class LLScriptGameControlEvent : public LLScriptEvent
+{
+public:
+    LLScriptGameControlEvent(S32 line, S32 col, LLScriptIdentifier *id, LLScriptIdentifier *buttons, LLScriptIdentifier *axes)
+        : LLScriptEvent(line, col, LSTT_GAME_CONTROL)
+        , mId(id)
+        , mButtons(buttons)
+        , mAxes(axes)
+    {
+    }
+
+    ~LLScriptGameControlEvent()
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype,
+                 BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+                 LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize,
+                 LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata);
+    S32 getSize();
+
+    LLScriptIdentifier *mId;
+    LLScriptIdentifier *mButtons;
+    LLScriptIdentifier *mAxes;
+};
+
+class LLScriptOnDeathEvent : public LLScriptEvent
+{
+public:
+    LLScriptOnDeathEvent(S32 line, S32 col)
+        : LLScriptEvent(line, col, LSTT_ON_DEATH)
+
+    {
+    }
+
+    ~LLScriptOnDeathEvent()
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype,
+                 BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+                 LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize,
+                 LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata);
+    S32 getSize();
+
+
+};
+
+class LLScriptOnDamageEvent : public LLScriptEvent
+{
+public:
+    LLScriptOnDamageEvent(S32 line, S32 col, LLScriptIdentifier *count)
+        : LLScriptEvent(line, col, LSTT_ON_DAMAGE)
+        , mCount(count)
+    {
+    }
+
+    ~LLScriptOnDamageEvent()
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype,
+                 BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+                 LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize,
+                 LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata);
+    S32 getSize();
+
+    LLScriptIdentifier *mCount;
+};
+
+class LLScriptFinalDamageEvent : public LLScriptEvent
+{
+public:
+    LLScriptFinalDamageEvent(S32 line, S32 col, LLScriptIdentifier *count)
+        : LLScriptEvent(line, col, LSTT_FINAL_DAMAGE)
+        , mCount(count)
+    {
+    }
+
+    ~LLScriptFinalDamageEvent()
+    {
+    }
+
+    void recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype,
+                 BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
+                 LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize,
+                 LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata);
+    S32 getSize();
+
+    LLScriptIdentifier *mCount;
+};
+
 
 class LLScriptExpression : public LLScriptFilePosition
 {

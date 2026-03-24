@@ -2797,6 +2797,745 @@ S32 LLScriptObjectRezEvent::getSize()
     return 4;
 }
 
+void LLScriptTransactionResultEvent::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "transaction_result( key ");
+        mID->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", integer ");
+        mSuccess->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", string ");
+        mData->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+        checkForDuplicateHandler(fp, this, scope, "transaction_result");
+        if (scope->checkEntry(mID->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mID->mScopeEntry = scope->addEntry(mID->mName, LIT_VARIABLE, LST_KEY);
+        }
+        if (scope->checkEntry(mSuccess->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mSuccess->mScopeEntry = scope->addEntry(mSuccess->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+        if (scope->checkEntry(mData->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mData->mScopeEntry = scope->addEntry(mData->mName, LIT_VARIABLE, LST_STRING);
+        }
+        break;
+    case LSCP_RESOURCE:
+        {
+            if (mID->mScopeEntry)
+            {
+                mID->mScopeEntry->mOffset = (S32)count;
+                mID->mScopeEntry->mSize = 4;
+                count += mID->mScopeEntry->mSize;
+                mSuccess->mScopeEntry->mOffset = (S32)count;
+                mSuccess->mScopeEntry->mSize = 4;
+                count += mSuccess->mScopeEntry->mSize;
+                mData->mScopeEntry->mOffset = (S32)count;
+                mData->mScopeEntry->mSize = 4;
+                count += mData->mScopeEntry->mSize;
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "transaction_result";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mID->mName, strlen(mID->mName) + 1);
+            chunk->addBytes(mSuccess->mName, strlen(mSuccess->mName) + 1);
+            chunk->addBytes(mData->mName, strlen(mData->mName) + 1);
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "transaction_result( valuetype [ScriptTypes]LindenLab.SecondLife.Key ");
+        mID->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", int32 ");
+        mSuccess->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", string ");
+        mData->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )");
+        break;
+    default:
+        mID->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        mSuccess->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        mData->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        break;
+    }
+}
+
+S32 LLScriptTransactionResultEvent::getSize()
+{
+    // key + integer + string = 12
+    return 12;
+}
+
+void LLScriptPathUpdateEvent::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "path_update( integer ");
+        mType->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", list ");
+        mReserved->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+        checkForDuplicateHandler(fp, this, scope, "path_update");
+        if (scope->checkEntry(mType->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mType->mScopeEntry = scope->addEntry(mType->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+        if (scope->checkEntry(mReserved->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mReserved->mScopeEntry = scope->addEntry(mReserved->mName, LIT_VARIABLE, LST_LIST);
+        }
+        break;
+    case LSCP_RESOURCE:
+        {
+            if (mType->mScopeEntry)
+            {
+                mType->mScopeEntry->mOffset = (S32)count;
+                mType->mScopeEntry->mSize = 4;
+                count += mType->mScopeEntry->mSize;
+                mReserved->mScopeEntry->mOffset = (S32)count;
+                mReserved->mScopeEntry->mSize = 4;
+                count += mReserved->mScopeEntry->mSize;
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "path_update";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mType->mName, strlen(mType->mName) + 1);
+            chunk->addBytes(mReserved->mName, strlen(mReserved->mName) + 1);
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "path_update( int32 ");
+        mType->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", class [mscorlib]System.Collections.ArrayList ");
+        mReserved->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )");
+        break;
+    default:
+        mType->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        mReserved->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        break;
+    }
+}
+
+S32 LLScriptPathUpdateEvent::getSize()
+{
+    // integer + list = 8
+    return 8;
+}
+
+void LLScriptEXPEvent::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "experience_permissions( key ");
+        mAgentId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+        checkForDuplicateHandler(fp, this, scope, "experience_permissions");
+        if (scope->checkEntry(mAgentId->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mAgentId->mScopeEntry = scope->addEntry(mAgentId->mName, LIT_VARIABLE, LST_KEY);
+        }
+        break;
+    case LSCP_RESOURCE:
+        {
+            if (mAgentId->mScopeEntry)
+            {
+                mAgentId->mScopeEntry->mOffset = (S32)count;
+                mAgentId->mScopeEntry->mSize = 4;
+                count += mAgentId->mScopeEntry->mSize;
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "experience_permissions";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mAgentId->mName, strlen(mAgentId->mName) + 1);
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "experience_permissions( valuetype [ScriptTypes]LindenLab.SecondLife.Key ");
+        mAgentId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )");
+        break;
+    default:
+        mAgentId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        break;
+    }
+}
+
+S32 LLScriptEXPEvent::getSize()
+{
+    // key = 4
+    return 4;
+}
+
+void LLScriptEXPDeniedEvent::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "experience_permissions_denied( key ");
+        mAgentId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", integer ");
+        mReason->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+        checkForDuplicateHandler(fp, this, scope, "experience_permissions_denied");
+        if (scope->checkEntry(mAgentId->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mAgentId->mScopeEntry = scope->addEntry(mAgentId->mName, LIT_VARIABLE, LST_KEY);
+        }
+        if (scope->checkEntry(mReason->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mReason->mScopeEntry = scope->addEntry(mReason->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+        break;
+    case LSCP_RESOURCE:
+        {
+            if (mAgentId->mScopeEntry)
+            {
+                mAgentId->mScopeEntry->mOffset = (S32)count;
+                mAgentId->mScopeEntry->mSize = 4;
+                count += mAgentId->mScopeEntry->mSize;
+                mReason->mScopeEntry->mOffset = (S32)count;
+                mReason->mScopeEntry->mSize = 4;
+                count += mReason->mScopeEntry->mSize;
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "experience_permissions_denied";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mAgentId->mName, strlen(mAgentId->mName) + 1);
+            chunk->addBytes(mReason->mName, strlen(mReason->mName) + 1);
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "experience_permissions_denied( valuetype [ScriptTypes]LindenLab.SecondLife.Key ");
+        mAgentId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", int32 ");
+        mReason->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )");
+        break;
+    default:
+        mAgentId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        mReason->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        break;
+    }
+}
+
+S32 LLScriptEXPDeniedEvent::getSize()
+{
+    // key + integer = 8
+    return 8;
+}
+
+void LLScriptLinksetDataEvent::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "linkset_data( integer ");
+        mAction->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", string ");
+        mName->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", string ");
+        mValue->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+        checkForDuplicateHandler(fp, this, scope, "linkset_data");
+        if (scope->checkEntry(mAction->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mAction->mScopeEntry = scope->addEntry(mAction->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+        if (scope->checkEntry(mName->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mName->mScopeEntry = scope->addEntry(mName->mName, LIT_VARIABLE, LST_STRING);
+        }
+        if (scope->checkEntry(mValue->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mValue->mScopeEntry = scope->addEntry(mValue->mName, LIT_VARIABLE, LST_STRING);
+        }
+        break;
+    case LSCP_RESOURCE:
+        {
+            if (mAction->mScopeEntry)
+            {
+                mAction->mScopeEntry->mOffset = (S32)count;
+                mAction->mScopeEntry->mSize = 4;
+                count += mAction->mScopeEntry->mSize;
+                mName->mScopeEntry->mOffset = (S32)count;
+                mName->mScopeEntry->mSize = 4;
+                count += mName->mScopeEntry->mSize;
+                mValue->mScopeEntry->mOffset = (S32)count;
+                mValue->mScopeEntry->mSize = 4;
+                count += mValue->mScopeEntry->mSize;
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "linkset_data";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mAction->mName, strlen(mAction->mName) + 1);
+            chunk->addBytes(mName->mName, strlen(mName->mName) + 1);
+            chunk->addBytes(mValue->mName, strlen(mValue->mName) + 1);
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "linkset_data( int32 ");
+        mAction->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", string ");
+        mName->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", string ");
+        mValue->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " )");
+        break;
+    default:
+        mAction->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        mName->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        mValue->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        break;
+    }
+}
+
+S32 LLScriptLinksetDataEvent::getSize()
+{
+    // integer + string + string = 12
+    return 12;
+}
+
+void LLScriptGameControlEvent::recurse(
+    LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg,
+    LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk,
+    LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "game_control( ");
+        fprintf(fp, "key ");
+        mId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", integer ");
+        mButtons->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", list ");
+        mAxes->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+      checkForDuplicateHandler(fp, this, scope, "game_control");
+
+        if (scope->checkEntry(mId->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mId->mScopeEntry = scope->addEntry(mId->mName, LIT_VARIABLE, LST_KEY);
+        }
+
+        if (scope->checkEntry(mButtons->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mButtons->mScopeEntry = scope->addEntry(mButtons->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+
+        if (scope->checkEntry(mAxes->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mAxes->mScopeEntry = scope->addEntry(mAxes->mName, LIT_VARIABLE, LST_LIST);
+        }
+
+        break;
+    case LSCP_RESOURCE:
+        {
+            // we're just tryng to determine how much space the variable needs
+            if (mId->mScopeEntry)
+            {
+                mId->mScopeEntry->mOffset = (S32)count;
+                mId->mScopeEntry->mSize = 4;
+                count += mId->mScopeEntry->mSize;
+                mButtons->mScopeEntry->mOffset = (S32)count;
+                mButtons->mScopeEntry->mSize = 4;
+                count += mButtons->mScopeEntry->mSize;
+                mAxes->mScopeEntry->mOffset = (S32)count;
+                mAxes->mScopeEntry->mSize = 4;
+                count += mAxes->mScopeEntry->mSize;
+
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "game_control";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mId->mName, strlen(mId->mName) + 1);
+            chunk->addBytes(mButtons->mName, strlen(mButtons->mName) + 1);
+            chunk->addBytes(mAxes->mName, strlen(mAxes->mName) + 1);
+
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "game_control(");
+        fprintf(fp, " ");
+        fprintf(fp, "valuetype [ScriptTypes]LindenLab.SecondLife.Key ");
+        mId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", int32 ");
+        mButtons->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, ", class [mscorlib]System.Collections.ArrayList ");
+        mAxes->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " ");
+
+        fprintf(fp, ")");
+        break;
+    default:
+        mId->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);;
+        mButtons->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);;
+        mAxes->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);;
+        break;
+    }
+}
+
+S32 LLScriptGameControlEvent::getSize()
+{
+    return 12;
+}
+
+
+void LLScriptOnDeathEvent::recurse(
+    LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg,
+    LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk,
+    LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "on_death( ");
+
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+      checkForDuplicateHandler(fp, this, scope, "on_death");
+
+        break;
+    case LSCP_RESOURCE:
+        {
+            // we're just tryng to determine how much space the variable needs
+            if (false)
+            {
+
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "on_death";
+            chunk->addBytes(name, strlen(name) + 1);
+
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "on_death(");
+
+        fprintf(fp, ")");
+        break;
+    default:
+
+        break;
+    }
+}
+
+S32 LLScriptOnDeathEvent::getSize()
+{
+    return 0;
+}
+
+void LLScriptOnDamageEvent::recurse(
+    LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg,
+    LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk,
+    LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "on_damage( ");
+        fprintf(fp, "integer ");
+        mCount->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+      checkForDuplicateHandler(fp, this, scope, "on_damage");
+
+        if (scope->checkEntry(mCount->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mCount->mScopeEntry = scope->addEntry(mCount->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+
+        break;
+    case LSCP_RESOURCE:
+        {
+            // we're just tryng to determine how much space the variable needs
+            if (mCount->mScopeEntry)
+            {
+                mCount->mScopeEntry->mOffset = (S32)count;
+                mCount->mScopeEntry->mSize = 4;
+                count += mCount->mScopeEntry->mSize;
+
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "on_damage";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mCount->mName, strlen(mCount->mName) + 1);
+
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "on_damage(");
+        fprintf(fp, " ");
+        fprintf(fp, "int32 ");
+        mCount->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " ");
+
+        fprintf(fp, ")");
+        break;
+    default:
+        mCount->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);;
+        break;
+    }
+}
+
+S32 LLScriptOnDamageEvent::getSize()
+{
+    return 4;
+}
+
+void LLScriptFinalDamageEvent::recurse(
+    LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg,
+    LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk,
+    LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
+{
+    if (gErrorToText.getErrors())
+    {
+        return;
+    }
+    switch(pass)
+    {
+    case LSCP_PRETTY_PRINT:
+    case LSCP_EMIT_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "final_damage( ");
+        fprintf(fp, "integer ");
+        mCount->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+
+        fprintf(fp, " )\n");
+        break;
+    case LSCP_SCOPE_PASS1:
+      checkForDuplicateHandler(fp, this, scope, "final_damage");
+
+        if (scope->checkEntry(mCount->mName))
+        {
+            gErrorToText.writeError(fp, this, LSERROR_DUPLICATE_NAME);
+        }
+        else
+        {
+            mCount->mScopeEntry = scope->addEntry(mCount->mName, LIT_VARIABLE, LST_INTEGER);
+        }
+
+        break;
+    case LSCP_RESOURCE:
+        {
+            // we're just tryng to determine how much space the variable needs
+            if (mCount->mScopeEntry)
+            {
+                mCount->mScopeEntry->mOffset = (S32)count;
+                mCount->mScopeEntry->mSize = 4;
+                count += mCount->mScopeEntry->mSize;
+
+            }
+        }
+        break;
+    case LSCP_EMIT_BYTE_CODE:
+        {
+#ifdef LSL_INCLUDE_DEBUG_INFO
+            char name[] = "final_damage";
+            chunk->addBytes(name, strlen(name) + 1);
+            chunk->addBytes(mCount->mName, strlen(mCount->mName) + 1);
+
+#endif
+        }
+        break;
+    case LSCP_EMIT_CIL_ASSEMBLY:
+        fdotabs(fp, tabs, tabsize);
+        fprintf(fp, "final_damage(");
+        fprintf(fp, " ");
+        fprintf(fp, "int32 ");
+        mCount->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+        fprintf(fp, " ");
+
+        fprintf(fp, ")");
+        break;
+    default:
+        mCount->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);;
+        break;
+    }
+}
+
+S32 LLScriptFinalDamageEvent::getSize()
+{
+    return 4;
+}
+
 void LLScriptControlEvent::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg, LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count, LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata)
 {
     if (gErrorToText.getErrors())
@@ -10682,6 +11421,14 @@ void LLScriptScript::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePa
             for (std::vector<LLScriptLibraryFunction>::const_iterator i = gScriptLibrary.mFunctions.begin();
                  i != gScriptLibrary.mFunctions.end(); ++i)
             {
+                // Sparse library IDs may leave placeholder entries in mFunctions.
+                // Skip unnamed slots; they are not real callable library functions.
+                if (!i->mName || !*i->mName)
+                {
+                    function_index++;
+                    continue;
+                }
+
                 // First, check to make sure this isn't a god only function, or that the viewer's agent is a god.
                 if (!i->mGodOnly || mGodLike)
                 {
