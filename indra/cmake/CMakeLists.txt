@@ -43,6 +43,7 @@ set(cmake_SOURCE_FILES
         LLTestCommand.cmake
         LLWindow.cmake
         Linking.cmake
+        LScript.cmake
         Meshoptimizer.cmake
         NDOF.cmake
         OPENAL.cmake
