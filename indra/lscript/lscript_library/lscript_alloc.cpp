@@ -61,7 +61,7 @@ void reset_hp_to_safe_spot(const U8 *buffer)
 }
 
 // create a heap from the HR to TM
-BOOL lsa_create_heap(U8 *heap_start, S32 size)
+bool lsa_create_heap(U8 *heap_start, S32 size)
 {
     LLScriptAllocEntry entry(size, LST_NULL);
 
@@ -107,7 +107,7 @@ S32 lsa_heap_top(U8 *heap_start, S32 maxtop)
 //          move to next block
 //          go to start of algorithm
 
-S32 lsa_heap_add_data(U8 *buffer, LLScriptLibData *data, S32 heapsize, BOOL b_delete)
+S32 lsa_heap_add_data(U8 *buffer, LLScriptLibData *data, S32 heapsize, bool b_delete)
 {
     if (get_register(buffer, LREG_FR))
         return 1;
@@ -524,7 +524,7 @@ void lsa_decrease_ref_count(U8 *buffer, S32 offset)
 char gLSAStringRead[TOP_OF_MEMORY];     /*Flawfinder: ignore*/
 
 
-LLScriptLibData *lsa_get_data(U8 *buffer, S32 &offset, BOOL b_dec_ref)
+LLScriptLibData *lsa_get_data(U8 *buffer, S32 &offset, bool b_dec_ref)
 {
     if (get_register(buffer, LREG_FR))
         return (new LLScriptLibData);
@@ -604,7 +604,7 @@ LLScriptLibData *lsa_get_data(U8 *buffer, S32 &offset, BOOL b_dec_ref)
     return retval;
 }
 
-LLScriptLibData *lsa_get_list_ptr(U8 *buffer, S32 &offset, BOOL b_dec_ref)
+LLScriptLibData *lsa_get_list_ptr(U8 *buffer, S32 &offset, bool b_dec_ref)
 {
     if (get_register(buffer, LREG_FR))
         return (new LLScriptLibData);

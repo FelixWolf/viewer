@@ -40,110 +40,110 @@ const U32 DELETE_FLAG       = 0x0001;
 const U32 CREDIT_MONEY_FLAG = 0x0002;
 
 // list of op code execute functions
-BOOL run_noop(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pop(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pops(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_poparg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popip(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popbp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_popslr(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_noop(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pop(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pops(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_poparg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popip(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popbp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_popslr(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_dup(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_dups(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_dupl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_dupv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_dupq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_dup(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_dups(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_dupl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_dupv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_dupq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_store(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_stores(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storel(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storev(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storeq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storeg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storegs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storegl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storegv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_storegq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadlp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadvp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadqp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadgp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadgsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadglp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadgvp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_loadgqp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_store(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_stores(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storel(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storev(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storeq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storeg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storegs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storegl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storegv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_storegq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadlp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadvp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadqp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadgp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadgsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadglp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadgvp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_loadgqp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_push(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushgs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushgl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushgv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushgq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_puship(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushbp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushargb(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushargi(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushargf(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushargs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushargv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushargq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushe(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pushev(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pusheq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_pusharge(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_push(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushgs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushgl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushgv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushgq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_puship(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushbp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushargb(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushargi(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushargf(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushargs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushargv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushargq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushe(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pushev(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pusheq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_pusharge(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_add(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_sub(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_mul(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_div(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_mod(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_add(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_sub(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_mul(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_div(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_mod(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_eq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_neq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_leq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_geq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_less(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_greater(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_eq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_neq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_leq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_geq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_less(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_greater(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_bitand(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_bitor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_bitxor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_booland(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_boolor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_bitand(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_bitor(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_bitxor(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_booland(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_boolor(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_shl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_shr(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_shl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_shr(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_neg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_bitnot(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_boolnot(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_neg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_bitnot(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_boolnot(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_jump(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_jumpif(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_jumpnif(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_jump(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_jumpif(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_jumpnif(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_state(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_call(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_return(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_cast(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_stacktos(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_stacktol(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_state(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_call(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_return(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_cast(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_stacktos(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_stacktol(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_print(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_print(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
-BOOL run_calllib(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
-BOOL run_calllib_two_byte(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+bool run_calllib(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
+bool run_calllib_two_byte(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
 void unknown_operation(U8 *buffer, LSCRIPTOpCodesEnum opcode);
 void integer_integer_operation(U8 *buffer, LSCRIPTOpCodesEnum opcode);
@@ -385,8 +385,8 @@ public:
     virtual void setEventHandlers(U64 value) = 0;
     virtual U64 getCurrentHandler() = 0;
     virtual void setCurrentHandler(U64 value) = 0;
-    virtual BOOL isFinished() const = 0;
-    virtual BOOL isStateChangePending() const = 0;
+    virtual bool isFinished() const = 0;
+    virtual bool isStateChangePending() const = 0;
     virtual S32 writeState(U8 **dest, U32 header_size, U32 footer_size) = 0; // Allocate memory for header, state and footer return size of state.
     virtual U32 getEventsSavedSize() = 0; // Returns 0 if events are written with state.
     virtual S32 writeEvents(U8 *dest) = 0; // Must write and return exactly the number of bytes returned by getEventsSavedSize.
@@ -402,7 +402,7 @@ public:
 
     // Run current event handler for a maximum of time_slice seconds.
     // Updates current handler and current events registers.
-    virtual void resumeEventHandler(BOOL b_print, const LLUUID &id, F32 time_slice) = 0;
+    virtual void resumeEventHandler(bool b_print, const LLUUID &id, F32 time_slice) = 0;
 
     // Run handler for event for a maximum of time_slice seconds.
     // Updates current handler and current events registers.
@@ -423,29 +423,29 @@ public:
     virtual U64 nextState() = 0;
 
     // Returns time taken.
-    virtual F32 runQuanta(BOOL b_print, const LLUUID &id,
+    virtual F32 runQuanta(bool b_print, const LLUUID &id,
                           const char **errorstr,
                           F32 quanta,
                           U32& events_processed, LLTimer& timer);
 
     // NOTE: babbage: this must be used on occasions where another script may already be executing. Only 2 levels of nesting are allowed.
     // Provided to support bizarre detach behaviour only. Do not use.
-    virtual F32 runNested(BOOL b_print, const LLUUID &id,
+    virtual F32 runNested(bool b_print, const LLUUID &id,
                           const char **errorstr,
                           F32 quanta,
                           U32& events_processed, LLTimer& timer);
 
     // Run smallest possible amount of code: an instruction for LSL2, a segment
     // between save tests for Mono
-    void runInstructions(BOOL b_print, const LLUUID &id,
+    void runInstructions(bool b_print, const LLUUID &id,
                          const char **errorstr,
                          U32& events_processed,
                          F32 quanta);
 
     bool isYieldDue() const;
 
-    void setReset(BOOL b) {mReset = b;}
-    BOOL getReset() const { return mReset; }
+    void setReset(bool b) {mReset = b;}
+    bool getReset() const { return mReset; }
 
     // Called when the script is scheduled to be run from newsim/LLScriptData
     virtual void startRunning() = 0;
@@ -460,7 +460,7 @@ public:
 
 private:
 
-    BOOL mReset;
+    bool mReset;
 
     static  S32     sTimerCheckSkip;        // Number of times to skip the timer check for performance reasons
 };
@@ -492,8 +492,8 @@ public:
     virtual void setEventHandlers(U64 value) {set_event_register(mBuffer, LREG_ER, value, getMajorVersion());}
     virtual U64 getCurrentHandler();
     virtual void setCurrentHandler(U64 value) {return set_event_register(mBuffer, LREG_IE, value, getMajorVersion());}
-    virtual BOOL isFinished() const {return get_register(mBuffer, LREG_IP) == 0;}
-    virtual BOOL isStateChangePending() const {return get_register(mBuffer, LREG_CS) != get_register(mBuffer, LREG_NS);}
+    virtual bool isFinished() const {return get_register(mBuffer, LREG_IP) == 0;}
+    virtual bool isStateChangePending() const {return get_register(mBuffer, LREG_CS) != get_register(mBuffer, LREG_NS);}
     virtual S32 writeState(U8 **dest, U32 header_size, U32 footer_size); // Not including Events.
     virtual U32 getEventsSavedSize() {return mEventData.getSavedSize();}
     virtual S32 writeEvents(U8 *dest) {return mEventData.write2bytestream(dest);}
@@ -507,7 +507,7 @@ public:
     virtual U32 getUsedMemory();
     // Run current event handler for a maximum of time_slice seconds.
     // Updates current handler and current events registers.
-    virtual void resumeEventHandler(BOOL b_print, const LLUUID &id, F32 time_slice);
+    virtual void resumeEventHandler(bool b_print, const LLUUID &id, F32 time_slice);
 
     // Run handler for event for a maximum of time_slice seconds.
     // Updates current handler and current events registers.
@@ -529,7 +529,7 @@ public:
 
     void init();
 
-    BOOL (*mExecuteFuncs[0x100])(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id);
+    bool (*mExecuteFuncs[0x100])(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id);
 
     U32                     mInstructionCount;
     U8                      *mBuffer;

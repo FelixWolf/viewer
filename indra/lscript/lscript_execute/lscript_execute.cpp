@@ -314,7 +314,7 @@ void LLScriptExecuteLSL2::setStateEventOpcoodeStartSafely( S32 state, LSCRIPTSta
 
 S32 lscript_push_variable(LLScriptLibData *data, U8 *buffer);
 
-void LLScriptExecuteLSL2::resumeEventHandler(BOOL b_print, const LLUUID &id, F32 time_slice)
+void LLScriptExecuteLSL2::resumeEventHandler(bool b_print, const LLUUID &id, F32 time_slice)
 {
     //  call opcode run function pointer with buffer and IP
     mInstructionCount++;
@@ -803,7 +803,7 @@ bool LLScriptExecute::isYieldDue() const
 
 // Run smallest number of instructions possible:
 // a single instruction for LSL2, a segment between save tests for Mono
-void LLScriptExecute::runInstructions(BOOL b_print, const LLUUID &id,
+void LLScriptExecute::runInstructions(bool b_print, const LLUUID &id,
                                      const char **errorstr,
                                      U32& events_processed,
                                      F32 quanta)
@@ -878,7 +878,7 @@ void LLScriptExecute::runInstructions(BOOL b_print, const LLUUID &id,
         }
 
         // try to get next event from stack
-        BOOL b_done = FALSE;
+        bool b_done = FALSE;
         LSCRIPTStateEventType event = LSTT_NULL;
 
         current_events = getCurrentEvents();
@@ -925,7 +925,7 @@ void LLScriptExecute::runInstructions(BOOL b_print, const LLUUID &id,
 }
 
 // Run for a single timeslice, or until a yield or state transition is due
-F32 LLScriptExecute::runQuanta(BOOL b_print, const LLUUID &id, const char **errorstr, F32 quanta, U32& events_processed, LLTimer& timer)
+F32 LLScriptExecute::runQuanta(bool b_print, const LLUUID &id, const char **errorstr, F32 quanta, U32& events_processed, LLTimer& timer)
 {
     S32 timer_checks = 0;
     F32 inloop = 0;
@@ -960,12 +960,12 @@ F32 LLScriptExecute::runQuanta(BOOL b_print, const LLUUID &id, const char **erro
     return inloop;
 }
 
-F32 LLScriptExecute::runNested(BOOL b_print, const LLUUID &id, const char **errorstr, F32 quanta, U32& events_processed, LLTimer& timer)
+F32 LLScriptExecute::runNested(bool b_print, const LLUUID &id, const char **errorstr, F32 quanta, U32& events_processed, LLTimer& timer)
 {
     return LLScriptExecute::runQuanta(b_print, id, errorstr, quanta, events_processed, timer);
 }
 
-BOOL run_noop(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_noop(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tNOOP\n", offset);
@@ -973,7 +973,7 @@ BOOL run_noop(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pop(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pop(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOP\n", offset);
@@ -982,7 +982,7 @@ BOOL run_pop(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pops(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pops(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPS\n", offset);
@@ -993,7 +993,7 @@ BOOL run_pops(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPL\n", offset);
@@ -1004,7 +1004,7 @@ BOOL run_popl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPV\n", offset);
@@ -1013,7 +1013,7 @@ BOOL run_popv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPQ\n", offset);
@@ -1022,7 +1022,7 @@ BOOL run_popq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_poparg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_poparg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPARG ", offset);
@@ -1034,7 +1034,7 @@ BOOL run_poparg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popip(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popip(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPIP\n", offset);
@@ -1043,7 +1043,7 @@ BOOL run_popip(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popbp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popbp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPBP\n", offset);
@@ -1053,7 +1053,7 @@ BOOL run_popbp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPSP\n", offset);
@@ -1063,7 +1063,7 @@ BOOL run_popsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_popslr(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_popslr(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPOPSLR\n", offset);
@@ -1073,7 +1073,7 @@ BOOL run_popslr(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_dup(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_dup(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tDUP\n", offset);
@@ -1084,7 +1084,7 @@ BOOL run_dup(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_dups(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_dups(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tDUPS\n", offset);
@@ -1096,7 +1096,7 @@ BOOL run_dups(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_dupl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_dupl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tDUPL\n", offset);
@@ -1108,7 +1108,7 @@ BOOL run_dupl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_dupv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_dupv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tDUPV\n", offset);
@@ -1120,7 +1120,7 @@ BOOL run_dupv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_dupq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_dupq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tDUPV\n", offset);
@@ -1132,7 +1132,7 @@ BOOL run_dupq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_store(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_store(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTORE ", offset);
@@ -1146,7 +1146,7 @@ BOOL run_store(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_stores(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_stores(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTORES ", offset);
@@ -1166,7 +1166,7 @@ BOOL run_stores(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storel(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storel(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREL ", offset);
@@ -1186,7 +1186,7 @@ BOOL run_storel(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storev(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storev(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREV ", offset);
@@ -1201,7 +1201,7 @@ BOOL run_storev(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storeq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storeq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREQ ", offset);
@@ -1216,7 +1216,7 @@ BOOL run_storeq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storeg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storeg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREG ", offset);
@@ -1230,7 +1230,7 @@ BOOL run_storeg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storegs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storegs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGS ", offset);
@@ -1251,7 +1251,7 @@ BOOL run_storegs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storegl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storegl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGL ", offset);
@@ -1272,7 +1272,7 @@ BOOL run_storegl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storegv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storegv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGV ", offset);
@@ -1287,7 +1287,7 @@ BOOL run_storegv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_storegq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_storegq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGQ ", offset);
@@ -1302,7 +1302,7 @@ BOOL run_storegq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREP ", offset);
@@ -1315,7 +1315,7 @@ BOOL run_loadp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTORESP ", offset);
@@ -1333,7 +1333,7 @@ BOOL run_loadsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadlp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadlp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTORELP ", offset);
@@ -1351,7 +1351,7 @@ BOOL run_loadlp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadvp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadvp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREVP ", offset);
@@ -1365,7 +1365,7 @@ BOOL run_loadvp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadqp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadqp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREQP ", offset);
@@ -1379,7 +1379,7 @@ BOOL run_loadqp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadgp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadgp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGP ", offset);
@@ -1392,7 +1392,7 @@ BOOL run_loadgp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadgsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadgsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGSP ", offset);
@@ -1410,7 +1410,7 @@ BOOL run_loadgsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadglp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadglp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGLP ", offset);
@@ -1428,7 +1428,7 @@ BOOL run_loadglp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadgvp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadgvp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGVP ", offset);
@@ -1442,7 +1442,7 @@ BOOL run_loadgvp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_loadgqp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_loadgqp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTOREGQP ", offset);
@@ -1456,7 +1456,7 @@ BOOL run_loadgqp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_push(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_push(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSH ", offset);
@@ -1469,7 +1469,7 @@ BOOL run_push(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHS ", offset);
@@ -1483,7 +1483,7 @@ BOOL run_pushs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHL ", offset);
@@ -1497,7 +1497,7 @@ BOOL run_pushl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHV ", offset);
@@ -1511,7 +1511,7 @@ BOOL run_pushv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHQ ", offset);
@@ -1525,7 +1525,7 @@ BOOL run_pushq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHG ", offset);
@@ -1538,7 +1538,7 @@ BOOL run_pushg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushgs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushgs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHGS ", offset);
@@ -1552,7 +1552,7 @@ BOOL run_pushgs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushgl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushgl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHGL ", offset);
@@ -1566,7 +1566,7 @@ BOOL run_pushgl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushgv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushgv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHGV ", offset);
@@ -1580,7 +1580,7 @@ BOOL run_pushgv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushgq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushgq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHGQ ", offset);
@@ -1594,7 +1594,7 @@ BOOL run_pushgq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_puship(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_puship(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHIP\n", offset);
@@ -1603,7 +1603,7 @@ BOOL run_puship(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushbp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushbp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHBP\n", offset);
@@ -1612,7 +1612,7 @@ BOOL run_pushbp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushsp(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHSP\n", offset);
@@ -1621,7 +1621,7 @@ BOOL run_pushsp(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushargb(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushargb(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHGARGB ", offset);
@@ -1633,7 +1633,7 @@ BOOL run_pushargb(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushargi(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushargi(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHARGI ", offset);
@@ -1645,7 +1645,7 @@ BOOL run_pushargi(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushargf(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushargf(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHARGF ", offset);
@@ -1657,7 +1657,7 @@ BOOL run_pushargf(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushargs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushargs(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHARGS ", offset);
@@ -1675,7 +1675,7 @@ BOOL run_pushargs(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_pushargv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushargv(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHARGV ", offset);
@@ -1687,7 +1687,7 @@ BOOL run_pushargv(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     lscript_push(buffer, arg);
     return FALSE;
 }
-BOOL run_pushargq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushargq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHARGQ ", offset);
@@ -1699,7 +1699,7 @@ BOOL run_pushargq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     lscript_push(buffer, arg);
     return FALSE;
 }
-BOOL run_pushe(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushe(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHE\n", offset);
@@ -1707,7 +1707,7 @@ BOOL run_pushe(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     lscript_pusharge(buffer, LSCRIPTDataSize[LST_INTEGER]);
     return FALSE;
 }
-BOOL run_pushev(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pushev(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHEV\n", offset);
@@ -1715,7 +1715,7 @@ BOOL run_pushev(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     lscript_pusharge(buffer, LSCRIPTDataSize[LST_VECTOR]);
     return FALSE;
 }
-BOOL run_pusheq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pusheq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHEQ\n", offset);
@@ -1723,7 +1723,7 @@ BOOL run_pusheq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     lscript_pusharge(buffer, LSCRIPTDataSize[LST_QUATERNION]);
     return FALSE;
 }
-BOOL run_pusharge(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_pusharge(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPUSHARGE ", offset);
@@ -2652,7 +2652,7 @@ static U8 safe_op_index(U8 index)
     return index;
 }
 
-BOOL run_add(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_add(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tADD ", offset);
@@ -2671,7 +2671,7 @@ BOOL run_add(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_sub(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_sub(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSUB ", offset);
@@ -2689,7 +2689,7 @@ BOOL run_sub(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_SUB);
     return FALSE;
 }
-BOOL run_mul(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_mul(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tMUL ", offset);
@@ -2707,7 +2707,7 @@ BOOL run_mul(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_MUL);
     return FALSE;
 }
-BOOL run_div(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_div(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tDIV ", offset);
@@ -2725,7 +2725,7 @@ BOOL run_div(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_DIV);
     return FALSE;
 }
-BOOL run_mod(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_mod(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tMOD ", offset);
@@ -2744,7 +2744,7 @@ BOOL run_mod(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_eq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_eq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tEQ ", offset);
@@ -2762,7 +2762,7 @@ BOOL run_eq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_EQ);
     return FALSE;
 }
-BOOL run_neq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_neq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tNEQ ", offset);
@@ -2780,7 +2780,7 @@ BOOL run_neq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_NEQ);
     return FALSE;
 }
-BOOL run_leq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_leq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tLEQ ", offset);
@@ -2798,7 +2798,7 @@ BOOL run_leq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_LEQ);
     return FALSE;
 }
-BOOL run_geq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_geq(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tGEQ ", offset);
@@ -2816,7 +2816,7 @@ BOOL run_geq(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_GEQ);
     return FALSE;
 }
-BOOL run_less(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_less(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tLESS ", offset);
@@ -2834,7 +2834,7 @@ BOOL run_less(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[arg1][arg2](buffer, LOPC_LESS);
     return FALSE;
 }
-BOOL run_greater(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_greater(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tGREATER ", offset);
@@ -2853,7 +2853,7 @@ BOOL run_greater(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_bitand(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_bitand(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBITAND\n", offset);
@@ -2861,7 +2861,7 @@ BOOL run_bitand(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[LST_INTEGER][LST_INTEGER](buffer, LOPC_BITAND);
     return FALSE;
 }
-BOOL run_bitor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_bitor(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBITOR\n", offset);
@@ -2869,7 +2869,7 @@ BOOL run_bitor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[LST_INTEGER][LST_INTEGER](buffer, LOPC_BITOR);
     return FALSE;
 }
-BOOL run_bitxor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_bitxor(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBITXOR\n", offset);
@@ -2877,7 +2877,7 @@ BOOL run_bitxor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[LST_INTEGER][LST_INTEGER](buffer, LOPC_BITXOR);
     return FALSE;
 }
-BOOL run_booland(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_booland(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBOOLAND\n", offset);
@@ -2885,7 +2885,7 @@ BOOL run_booland(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[LST_INTEGER][LST_INTEGER](buffer, LOPC_BOOLAND);
     return FALSE;
 }
-BOOL run_boolor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_boolor(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBOOLOR\n", offset);
@@ -2894,7 +2894,7 @@ BOOL run_boolor(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_shl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_shl(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSHL\n", offset);
@@ -2902,7 +2902,7 @@ BOOL run_shl(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     binary_operations[LST_INTEGER][LST_INTEGER](buffer, LOPC_SHL);
     return FALSE;
 }
-BOOL run_shr(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_shr(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSHR\n", offset);
@@ -2983,7 +2983,7 @@ void quaternion_operation(U8 *buffer, LSCRIPTOpCodesEnum opcode)
     }
 }
 
-BOOL run_neg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_neg(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tNEG ", offset);
@@ -2998,7 +2998,7 @@ BOOL run_neg(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_bitnot(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_bitnot(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBITNOT\n", offset);
@@ -3007,7 +3007,7 @@ BOOL run_bitnot(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_boolnot(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_boolnot(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tBOOLNOT\n", offset);
@@ -3016,7 +3016,7 @@ BOOL run_boolnot(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_jump(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_jump(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tJUMP ", offset);
@@ -3028,7 +3028,7 @@ BOOL run_jump(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_jumpif(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_jumpif(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tJUMPIF ", offset);
@@ -3155,7 +3155,7 @@ BOOL run_jumpif(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_jumpnif(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_jumpnif(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tJUMPNIF ", offset);
@@ -3290,7 +3290,7 @@ BOOL run_jumpnif(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_state(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_state(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tSTATE ", offset);
@@ -3326,7 +3326,7 @@ BOOL run_state(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_call(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_call(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tCALL ", offset);
@@ -3364,7 +3364,7 @@ BOOL run_call(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_return(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_return(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tRETURN\n", offset);
@@ -3384,7 +3384,7 @@ BOOL run_return(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
 
 
 
-BOOL run_cast(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_cast(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     char caststr[1024];     /*Flawfinder: ignore*/
     if (b_print)
@@ -3758,7 +3758,7 @@ BOOL run_cast(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_stacktos(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_stacktos(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     offset++;
     S32 length = lscript_pop_int(buffer);
@@ -3864,7 +3864,7 @@ void lscript_stacktol_pop_variable(LLScriptLibData *data, U8 *buffer, char type)
     }
 }
 
-BOOL run_stacktol(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_stacktol(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     offset++;
     S32 length = safe_instruction_bytestream2integer(buffer, offset);
@@ -3896,7 +3896,7 @@ BOOL run_stacktol(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return FALSE;
 }
 
-BOOL run_print(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_print(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     if (b_print)
         printf("[0x%X]\tPRINT ", offset);
@@ -4017,7 +4017,7 @@ BOOL run_print(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
 }
 
 
-void lscript_run(const std::string& filename, BOOL b_debug)
+void lscript_run(const std::string& filename, bool b_debug)
 {
     LLTimer timer;
 
@@ -4227,7 +4227,7 @@ S32 lscript_push_variable(LLScriptLibData *data, U8 *buffer)
 
 
 // Shared code for run_calllib() and run_calllib_two_byte()
-BOOL run_calllib_common(U8 *buffer, S32 &offset, const LLUUID &id, U16 arg)
+bool run_calllib_common(U8 *buffer, S32 &offset, const LLUUID &id, U16 arg)
 {
     if (arg >= gScriptLibrary.mFunctions.size())
     {
@@ -4287,7 +4287,7 @@ BOOL run_calllib_common(U8 *buffer, S32 &offset, const LLUUID &id, U16 arg)
 }
 
 
-BOOL run_calllib(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_calllib(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     offset++;
     U16 arg = (U16) safe_instruction_bytestream2byte(buffer, offset);
@@ -4302,7 +4302,7 @@ BOOL run_calllib(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
     return run_calllib_common(buffer, offset, id, arg);
 }
 
-BOOL run_calllib_two_byte(U8 *buffer, S32 &offset, BOOL b_print, const LLUUID &id)
+bool run_calllib_two_byte(U8 *buffer, S32 &offset, bool b_print, const LLUUID &id)
 {
     offset++;
     U16 arg = safe_instruction_bytestream2u16(buffer, offset);

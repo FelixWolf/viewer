@@ -30,9 +30,9 @@
 #include "lscript_error.h"
 
 LSCRIPTType implicit_casts(LSCRIPTType left_side, LSCRIPTType right_side);
-BOOL legal_casts(LSCRIPTType cast, LSCRIPTType base);
+bool legal_casts(LSCRIPTType cast, LSCRIPTType base);
 LSCRIPTType promote(LSCRIPTType left_side, LSCRIPTType right_side);
-BOOL legal_assignment(LSCRIPTType left_side, LSCRIPTType right_side);
+bool legal_assignment(LSCRIPTType left_side, LSCRIPTType right_side);
 
 typedef enum e_lscript_expression_types
 {
@@ -83,8 +83,8 @@ typedef enum e_lscript_expression_types
     LET_EOF
 } LSCRIPTExpressionType;
 
-BOOL legal_binary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTType right_side, LSCRIPTExpressionType expression);
-BOOL legal_unary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTExpressionType expression);
+bool legal_binary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTType right_side, LSCRIPTExpressionType expression);
+bool legal_unary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTExpressionType expression);
 
 void init_supported_expressions(void);
 

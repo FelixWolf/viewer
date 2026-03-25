@@ -1235,11 +1235,11 @@ int yyerror(const char *fmt, ...)
 //#define EMERGENCY_DEBUG_PRINTOUTS
 //#define EMIT_CIL_ASSEMBLER
 
-BOOL lscript_compile(const char* src_filename, const char* dst_filename,
-                     const char* err_filename, BOOL compile_to_mono, const char* class_name, BOOL is_god_like)
+bool lscript_compile(const char* src_filename, const char* dst_filename,
+                     const char* err_filename, bool compile_to_mono, const char* class_name, bool is_god_like)
 {
-    BOOL            b_parse_ok = FALSE;
-    BOOL            b_dummy = FALSE;
+    bool            b_parse_ok = FALSE;
+    bool            b_dummy = FALSE;
     U64             b_dummy_count = FALSE;
     LSCRIPTType     type = LST_NULL;
 
@@ -1321,7 +1321,7 @@ BOOL lscript_compile(const char* src_filename, const char* dst_filename,
 }
 
 
-BOOL lscript_compile(char *filename, BOOL compile_to_mono, BOOL is_god_like = FALSE)
+bool lscript_compile(char *filename, bool compile_to_mono, bool is_god_like = FALSE)
 {
     char src_filename[MAX_STRING];
     sprintf(src_filename, "%s.lsl", filename);

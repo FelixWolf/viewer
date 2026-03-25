@@ -80,7 +80,7 @@ public:
     virtual ~LLScriptFilePosition() {}
 
     virtual void recurse(LLFILE *fp, S32 tabs, S32 tabsize,
-                        LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, BOOL &prunearg,
+                        LSCRIPTCompilePass pass, LSCRIPTPruneType ptype, bool &prunearg,
                         LLScriptScope *scope, LSCRIPTType &type, LSCRIPTType basetype, U64 &count,
                         LLScriptByteCodeChunk *chunk, LLScriptByteCodeChunk *heap, S32 stacksize, LLScriptScopeEntry *entry, S32 entrycount, LLScriptLibData **ldata) = 0;
     virtual S32 getSize() = 0;
@@ -138,8 +138,8 @@ public:
     void writeError(LLFILE *fp, LLScriptFilePosition *pos, LSCRIPTErrors error);
     void writeError(LLFILE *fp, S32 line, S32 col, LSCRIPTErrors error);
 
-    BOOL getErrors() { return mTotalErrors; }
-    BOOL getWarnings() { return mTotalWarnings; }
+    bool getErrors() { return mTotalErrors; }
+    bool getWarnings() { return mTotalWarnings; }
 
     S32 mTotalErrors;
     S32 mTotalWarnings;

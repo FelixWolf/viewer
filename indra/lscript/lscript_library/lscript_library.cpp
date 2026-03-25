@@ -580,7 +580,7 @@ void LLScriptLibrary::init()
     // id, name, return type, parameters, energy, sleep, mono_sleep, gods-only
 }
 
-LLScriptLibraryFunction::LLScriptLibraryFunction(F32 eu, F32 st, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &), const char *name, const char *ret_type, const char *args, BOOL god_only)
+LLScriptLibraryFunction::LLScriptLibraryFunction(F32 eu, F32 st, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &), const char *name, const char *ret_type, const char *args, bool god_only)
         : mEnergyUse(eu), mSleepTime(st), mExecFunc(exec_func), mName(name), mReturnType(ret_type), mArgs(args), mGodOnly(god_only)
 {
 }
@@ -589,13 +589,13 @@ LLScriptLibraryFunction::~LLScriptLibraryFunction()
 {
 }
 
-void LLScriptLibrary::addFunction(F32 eu, F32 st, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &), const char *name, const char *ret_type, const char *args, BOOL god_only)
+void LLScriptLibrary::addFunction(F32 eu, F32 st, void (*exec_func)(LLScriptLibData *, LLScriptLibData *, const LLUUID &), const char *name, const char *ret_type, const char *args, bool god_only)
 {
     LLScriptLibraryFunction func(eu, st, exec_func, name, ret_type, args, god_only);
     mFunctions.push_back(func);
 }
 
-void LLScriptLibrary::dangerousAddFunction(U32 id, const char *name, const char *ret_type, const char *args, F32 eu, F32 st, F32 mst, BOOL god_only)
+void LLScriptLibrary::dangerousAddFunction(U32 id, const char *name, const char *ret_type, const char *args, F32 eu, F32 st, F32 mst, bool god_only)
 {
     LLScriptLibraryFunction func(eu, st, dummy_func, name, ret_type, args, god_only);
      if (id >= mFunctions.size())
@@ -618,7 +618,7 @@ void LLScriptLibrary::assignExec(const char *name, void (*exec_func)(LLScriptLib
     LL_ERRS() << "Unknown LSL function in assignExec: " << name << LL_ENDL;
 }
 
-void LLScriptLibData::print(std::ostream &s, BOOL b_prepend_comma)
+void LLScriptLibData::print(std::ostream &s, bool b_prepend_comma)
 {
     char tmp[1024]; /*Flawfinder: ignore*/
     if (b_prepend_comma)
@@ -655,7 +655,7 @@ void LLScriptLibData::print(std::ostream &s, BOOL b_prepend_comma)
     }
 }
 
-void LLScriptLibData::print_separator(std::ostream& ostr, BOOL b_prepend_sep, char* sep)
+void LLScriptLibData::print_separator(std::ostream& ostr, bool b_prepend_sep, char* sep)
 {
     if (b_prepend_sep)
     {

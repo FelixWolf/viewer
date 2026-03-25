@@ -112,7 +112,7 @@ inline void bytestream2alloc_entry(LLScriptAllocEntry &entry, U8 *buffer, S32 &o
 }
 
 // create a heap from the HR to TM
-BOOL lsa_create_heap(U8 *heap_start, S32 size);
+bool lsa_create_heap(U8 *heap_start, S32 size);
 void lsa_fprint_heap(U8 *buffer, LLFILE *fp);
 
 void lsa_print_heap(U8 *buffer);
@@ -137,7 +137,7 @@ void lsa_print_heap(U8 *buffer);
 //          move to next block
 //          go to start of algorithm
 
-S32 lsa_heap_add_data(U8 *buffer, LLScriptLibData *data, S32 heapsize, BOOL b_delete);
+S32 lsa_heap_add_data(U8 *buffer, LLScriptLibData *data, S32 heapsize, bool b_delete);
 
 S32 lsa_heap_top(U8 *heap_start, S32 maxsize);
 
@@ -179,8 +179,8 @@ inline S32 get_max_heap_size(U8 *buffer)
 }
 
 
-LLScriptLibData *lsa_get_data(U8 *buffer, S32 &offset, BOOL b_dec_ref);
-LLScriptLibData *lsa_get_list_ptr(U8 *buffer, S32 &offset, BOOL b_dec_ref);
+LLScriptLibData *lsa_get_data(U8 *buffer, S32 &offset, bool b_dec_ref);
+LLScriptLibData *lsa_get_list_ptr(U8 *buffer, S32 &offset, bool b_dec_ref);
 
 S32 lsa_cat_strings(U8 *buffer, S32 offset1, S32 offset2, S32 heapsize);
 S32 lsa_cmp_strings(U8 *buffer, S32 offset1, S32 offset2);
