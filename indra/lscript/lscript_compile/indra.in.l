@@ -18,25 +18,10 @@ FS          (f|F)
 #pragma warning (disable : 4018) // warning C4018: signed/unsigned mismatch
 #pragma warning (disable : 4702) // warning C4702: unreachable code
 #endif  //  LL_WINDOWS
-#include "llmath.h"
 #include "lscript_tree.h"
 #include "lscript_typecheck.h"
 #include "lscript_resource.h"
 #include "indra.y.hpp"
-#include "lltimer.h"
-#include "indra_constants.h"
-#include "lllslconstants.h"
-#include "lluuid.h"
-#include "llassetstorage.h"
-#include "llpartdata.h"
-#include "llvehicleparams.h"
-#include "llpermissionsflags.h"
-#include "llfollowcamparams.h"
-#include "llparcelflags.h"
-#include "llregionflags.h"
-#include "lscript_http.h"
-#include "llclickaction.h"
-#include "llmediaentry.h"
 
 void count();
 void line_comment();

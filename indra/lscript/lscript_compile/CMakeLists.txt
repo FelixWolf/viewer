@@ -39,10 +39,6 @@ mark_as_advanced(M4)
 
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
-    ${LLMATH_INCLUDE_DIRS}
-    ${LLMESSAGE_INCLUDE_DIRS}
-    ${LLINVENTORY_INCLUDE_DIRS}
-    ${LLPRIMITIVE_INCLUDE_DIRS}
     ${LSCRIPT_INCLUDE_DIRS}
     )
 include_directories(SYSTEM
@@ -157,11 +153,7 @@ endif (DARWIN)
 add_library (lscript_compile ${lscript_compile_SOURCE_FILES})
 
 target_link_libraries(lscript_compile
-        llinventory
-        llmessage
-        llmath
         llfilesystem
-        llprimitive
         llcommon
         lscript
         )
