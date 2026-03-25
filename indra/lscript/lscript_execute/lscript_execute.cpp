@@ -88,7 +88,9 @@ LLScriptExecuteLSL2::LLScriptExecuteLSL2(LLFILE *fp)
         LL_WARNS() << "Short read" << LL_ENDL;
     }
     fclose(fp);
-
+    mBytecodeSize = filesize;
+    mBytecode = new U8[mBytecodeSize];
+    memcpy(mBytecode, mBuffer, mBytecodeSize);
     init();
 }
 
