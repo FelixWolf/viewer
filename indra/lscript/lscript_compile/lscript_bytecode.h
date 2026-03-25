@@ -47,7 +47,7 @@ public:
 class LLScriptByteCodeChunk
 {
 public:
-    LLScriptByteCodeChunk(BOOL b_need_jumps);
+    LLScriptByteCodeChunk(bool b_need_jumps);
     ~LLScriptByteCodeChunk();
 
     void addByte(U8 byte);

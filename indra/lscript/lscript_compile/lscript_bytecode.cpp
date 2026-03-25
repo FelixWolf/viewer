@@ -57,7 +57,7 @@ void LLScriptJumpTable::addJump(char *name, S32 offset)
 }
 
 
-LLScriptByteCodeChunk::LLScriptByteCodeChunk(BOOL b_need_jumps)
+LLScriptByteCodeChunk::LLScriptByteCodeChunk(bool b_need_jumps)
 : mCodeChunk(NULL), mCurrentOffset(0), mJumpTable(NULL)
 {
     if (b_need_jumps)

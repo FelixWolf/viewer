@@ -415,7 +415,7 @@ inline void set_fault(const U8 *stream, LSCRIPTRunTimeFaults fault)
    }
 }
 
-inline BOOL set_ip(U8 *stream, S32 ip)
+inline bool set_ip(U8 *stream, S32 ip)
 {
     // Verify that the Instruction Pointer is in a valid
     // code area (between the Global Function Register
@@ -441,7 +441,7 @@ inline BOOL set_ip(U8 *stream, S32 ip)
     return TRUE;
 }
 
-inline BOOL set_bp(U8 *stream, S32 bp)
+inline bool set_bp(U8 *stream, S32 bp)
 {
     // Verify that the Base Pointer is in a valid
     // data area (between the Heap Pointer and
@@ -469,7 +469,7 @@ inline BOOL set_bp(U8 *stream, S32 bp)
     return TRUE;
 }
 
-inline BOOL set_sp(U8 *stream, S32 sp)
+inline bool set_sp(U8 *stream, S32 sp)
 {
     // Verify that the Stack Pointer is in a valid
     // data area (between the Heap Pointer and
@@ -618,7 +618,7 @@ inline void lscript_pusharge(U8 *stream, S32 value)
     }
 }
 
-inline BOOL lscript_check_local(U8 *stream, S32 &address, S32 size)
+inline bool lscript_check_local(U8 *stream, S32 &address, S32 size)
 {
     S32 sp = get_register(stream, LREG_SP);
     S32 bp = get_register(stream, LREG_BP);
@@ -640,7 +640,7 @@ inline BOOL lscript_check_local(U8 *stream, S32 &address, S32 size)
     return TRUE;
 }
 
-inline BOOL lscript_check_global(U8 *stream, S32 &address, S32 size)
+inline bool lscript_check_global(U8 *stream, S32 &address, S32 size)
 {
     S32 gvr = get_register(stream, LREG_GVR);
 
@@ -941,7 +941,7 @@ inline LSCRIPTStateEventType return_first_event(S32 event)
 // the safe instruction versions of these commands will only work if offset is between
 // GFR and HR, meaning that it is an instruction (more or less) in global functions or event handlers
 
-inline BOOL safe_instruction_check_address(U8 *stream, S32 offset, S32 size)
+inline bool safe_instruction_check_address(U8 *stream, S32 offset, S32 size)
 {
     S32 gfr = get_register(stream, LREG_GFR);
     if (offset < gfr)
@@ -964,7 +964,7 @@ inline BOOL safe_instruction_check_address(U8 *stream, S32 offset, S32 size)
     }
 }
 
-inline BOOL safe_heap_check_address(U8 *stream, S32 offset, S32 size)
+inline bool safe_heap_check_address(U8 *stream, S32 offset, S32 size)
 {
     S32 hr = get_register(stream, LREG_HR);
     if (offset < hr)

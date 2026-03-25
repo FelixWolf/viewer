@@ -158,7 +158,7 @@ LSCRIPTType promote(LSCRIPTType left_side, LSCRIPTType right_side)
     return LST_UNDEFINED;
 }
 
-BOOL legal_assignment(LSCRIPTType left_side, LSCRIPTType right_side)
+bool legal_assignment(LSCRIPTType left_side, LSCRIPTType right_side)
 {
     // this is to prevent cascading errors
     if (  (left_side == LST_UNDEFINED)
@@ -177,7 +177,7 @@ BOOL legal_assignment(LSCRIPTType left_side, LSCRIPTType right_side)
     }
 }
 
-BOOL legal_casts(LSCRIPTType cast, LSCRIPTType base)
+bool legal_casts(LSCRIPTType cast, LSCRIPTType base)
 {
     switch(base)
     {
@@ -535,7 +535,7 @@ void init_supported_expressions(void)
     gSupportedExpressionArray[LET_POST_DECREMENT][LST_FLOATINGPOINT][LST_NULL] = LST_FLOATINGPOINT;
 }
 
-BOOL legal_binary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTType right_side, LSCRIPTExpressionType expression)
+bool legal_binary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTType right_side, LSCRIPTExpressionType expression)
 {
     if (  (left_side == LST_UNDEFINED)
         ||(right_side == LST_UNDEFINED))
@@ -561,7 +561,7 @@ BOOL legal_binary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPT
     }
 }
 
-BOOL legal_unary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTExpressionType expression)
+bool legal_unary_expression(LSCRIPTType &result, LSCRIPTType left_side, LSCRIPTExpressionType expression)
 {
     if (left_side == LST_UNDEFINED)
     {
