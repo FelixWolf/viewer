@@ -20,6 +20,9 @@ add_subdirectory(lscript_stdlib)
 
 add_subdirectory(lscript_library)
 
+add_subdirectory(tool_compile)
+add_subdirectory(tool_execute)
+
 add_library(lscript INTERFACE)
 target_include_directories(lscript INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/lscript_compile
