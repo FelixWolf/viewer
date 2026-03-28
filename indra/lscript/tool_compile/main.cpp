@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         ("output", boost::program_options::value<std::string>(), "output file")
         ("error", boost::program_options::value<std::string>(), "error file")
         ("debug", boost::program_options::value<std::string>(), "debug file")
-        ("mono", "Compile to mono")
+        ("target", boost::program_options::value<std::string>(), "compile target: assembly | bytecode | cil")
         ("class", boost::program_options::value<std::string>(), "Class ID")
         ("god", "Compile in Godmode");
 
@@ -77,17 +77,40 @@ int main(int argc, char *argv[])
 
     LLUUID uid = LLUUID::generateNewID();
 
+    LScriptCompileTarget compile_target = LSCRIPT_TARGET_BYTE_CODE;
+    if (vm.count("target"))
+    {
+        std::string target = vm["target"].as<std::string>();
+        LLStringUtil::toLower(target);
+        if (target == "assembly")
+        {
+            compile_target = LSCRIPT_TARGET_ASSEMBLY;
+        }
+        else if (target == "cil" || target == "mono")
+        {
+            compile_target = LSCRIPT_TARGET_CIL_ASSEMBLY;
+        }
+        else
+        {
+            compile_target = LSCRIPT_TARGET_BYTE_CODE;
+        }
+    }
+
     std::string dst_filename;
     if (!vm.count("output"))
     {
         std::filesystem::path inputFilePath(vm["file"].as<std::string>());
-        if(!vm.count("mono"))
+        if (compile_target == LSCRIPT_TARGET_BYTE_CODE)
         {
             dst_filename = inputFilePath.stem().string() + ".lso";
         }
-        else
+        else if (compile_target == LSCRIPT_TARGET_CIL_ASSEMBLY)
         {
             dst_filename = inputFilePath.stem().string() + ".cil";
+        }
+        else
+        {
+            dst_filename = inputFilePath.stem().string() + ".asm";
         }
     }
     else
@@ -123,7 +146,7 @@ int main(int argc, char *argv[])
         success = lscript_compile(vm["file"].as<std::string>().c_str(),
                         dst_filename.c_str(),
                         err_filename.c_str(),
-                        vm.count("mono") > 0,
+                        compile_target,
                         classname.c_str(),
                         vm.count("god") > 0);
     }
@@ -132,7 +155,7 @@ int main(int argc, char *argv[])
         success = lscript_compile(vm["file"].as<std::string>().c_str(),
                         dst_filename.c_str(),
                         err_filename.c_str(),
-                        vm.count("mono") > 0,
+                        compile_target,
                         classname.c_str(),
                         vm.count("god") > 0);
     }

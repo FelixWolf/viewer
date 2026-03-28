@@ -21,6 +21,7 @@ FS          (f|F)
 #include "lscript_tree.h"
 #include "lscript_typecheck.h"
 #include "lscript_resource.h"
+#include "lscript_rt_interface.h"
 #include "indra.y.hpp"
 
 void count();
@@ -176,7 +177,7 @@ int yyerror(const char *fmt, ...)
 //#define EMIT_CIL_ASSEMBLER
 
 bool lscript_compile(const char* src_filename, const char* dst_filename,
-                     const char* err_filename, bool compile_to_mono, const char* class_name, bool is_god_like)
+                     const char* err_filename, LScriptCompileTarget compile_target, const char* class_name, bool is_god_like)
 {
     bool            b_parse_ok = FALSE;
     bool            b_dummy = FALSE;
@@ -235,13 +236,18 @@ bool lscript_compile(const char* src_filename, const char* dst_filename,
 #ifdef EMERGENCY_DEBUG_PRINTOUTS
                 gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_ASSEMBLY, LSPRUNE_INVALID,  b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
 #endif
-                if(TRUE == compile_to_mono)
+                switch (compile_target)
                 {
-                    gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_CIL_ASSEMBLY, LSPRUNE_INVALID,  b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
-                }
-                else
-                {
+                case LSCRIPT_TARGET_ASSEMBLY:
+                    gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_ASSEMBLY, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
+                    break;
+                case LSVRIPT_TARGET_CIL_ASSEMBLY:
+                    gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_CIL_ASSEMBLY, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
+                    break;
+                case LSCRIPT_TARGET_BYTE_CODE:
+                default:
                     gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_BYTE_CODE, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
+                    break;
                 }
             }
             delete gScopeStringTable;
@@ -261,7 +267,7 @@ bool lscript_compile(const char* src_filename, const char* dst_filename,
 }
 
 
-bool lscript_compile(char *filename, bool compile_to_mono, bool is_god_like = FALSE)
+bool lscript_compile(char *filename, LScriptCompileTarget compile_target, bool is_god_like)
 {
     char src_filename[MAX_STRING];
     sprintf(src_filename, "%s.lsl", filename);
@@ -269,7 +275,19 @@ bool lscript_compile(char *filename, bool compile_to_mono, bool is_god_like = FA
     sprintf(err_filename, "%s.out", filename);
     char class_name[MAX_STRING];
     sprintf(class_name, "%s", filename);
-    return lscript_compile(src_filename, NULL, err_filename, compile_to_mono, class_name, is_god_like);
+    return lscript_compile(src_filename, NULL, err_filename, compile_target, class_name, is_god_like);
+}
+
+bool lscript_compile(const char* src_filename, const char* dst_filename,
+                     const char* err_filename, bool compile_to_mono, const char* class_name, bool is_god_like)
+{
+    return lscript_compile(src_filename, dst_filename,
+                     err_filename, compile_to_mono?LSCRIPT_TARGET_CIL_ASSEMBLY:LSCRIPT_TARGET_BYTE_CODE, class_name, is_god_like);
+}
+
+bool lscript_compile(char *filename, bool compile_to_mono, bool is_god_like)
+{
+    return lscript_compile(filename, compile_to_mono?LSCRIPT_TARGET_CIL_ASSEMBLY:LSCRIPT_TARGET_BYTE_CODE, is_god_like);
 }
 
 
