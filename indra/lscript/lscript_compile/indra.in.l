@@ -93,6 +93,8 @@ int yyerror(const char *fmt, ...);
 "do"                { count(); return(DO); }
 "while"             { count(); return(WHILE); }
 
+"print"             { count(); return(PRINT); }
+
 "listen"            { count(); return(CHAT); }
 "on_rez"            { count(); return(REZ); }
 "changed"           { count(); return(INVENTORY); }
