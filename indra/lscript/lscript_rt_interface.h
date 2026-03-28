@@ -27,6 +27,16 @@
 #ifndef LL_LSCRIPT_RT_INTERFACE_H
 #define LL_LSCRIPT_RT_INTERFACE_H
 
+enum LScriptCompileTarget
+{
+    LSCRIPT_TARGET_ASSEMBLY,
+    LSCRIPT_TARGET_BYTE_CODE,
+    LSCRIPT_TARGET_CIL_ASSEMBLY
+};
+
+bool lscript_compile(char *filename, LScriptCompileTarget compile_target, bool is_god_like = false);
+bool lscript_compile(const char* src_filename, const char* dst_filename,
+                     const char* err_filename, LScriptCompileTarget compile_target, const char* class_name, bool is_god_like = false);
 bool lscript_compile(char *filename, bool compile_to_mono, bool is_god_like = false);
 bool lscript_compile(const char* src_filename, const char* dst_filename,
                      const char* err_filename, bool compile_to_mono, const char* class_name, bool is_god_like = false);

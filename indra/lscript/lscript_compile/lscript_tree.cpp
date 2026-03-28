@@ -11317,8 +11317,10 @@ LLScriptScript::LLScriptScript(LLScritpGlobalStorage *globals,
     mStates(states), mGlobalScope(NULL), mGlobals(NULL), mGlobalFunctions(NULL), mGodLike(FALSE)
 {
     const char DEFAULT_BYTECODE_FILENAME[] = "lscript.lso";
+    const char DEFAULT_ASSEMBLY_FILENAME[] = "lscript.asm";
 
     mBytecodeDest = DEFAULT_BYTECODE_FILENAME;
+    mAssemblyDest = DEFAULT_ASSEMBLY_FILENAME;
     LLScriptGlobalVariable  *tvar;
     LLScriptGlobalFunctions *tfunc;
     LLScritpGlobalStorage *temp;
@@ -11367,6 +11369,11 @@ LLScriptScript::LLScriptScript(LLScritpGlobalStorage *globals,
 void LLScriptScript::setBytecodeDest(const char* dst_filename)
 {
     mBytecodeDest = ll_safe_string(dst_filename);
+}
+
+void LLScriptScript::setAssemblyDest(const char* dst_filename)
+{
+    mAssemblyDest = ll_safe_string(dst_filename);
 }
 
 static void print_cil_globals(LLFILE* fp, LLScriptGlobalVariable* global)
@@ -11487,27 +11494,33 @@ void LLScriptScript::recurse(LLFILE *fp, S32 tabs, S32 tabsize, LSCRIPTCompilePa
         mStates->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
         break;
     case LSCP_EMIT_ASSEMBLY:
-
-        if (mGlobals)
         {
-            fprintf(fp, "GLOBALS\n");
-            fdotabs(fp, tabs, tabsize);
-            mGlobals->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
-            fprintf(fp, "\n");
-        }
+            LLFILE* asmfp = LLFile::fopen(mAssemblyDest, "w");      /*Flawfinder: ignore*/
+            if (asmfp)
+            {
+                if (mGlobals)
+                {
+                    fprintf(asmfp, "GLOBALS\n");
+                    fdotabs(asmfp, tabs, tabsize);
+                    mGlobals->recurse(asmfp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+                    fprintf(asmfp, "\n");
+                }
 
-        if (mGlobalFunctions)
-        {
-            fprintf(fp, "GLOBAL FUNCTIONS\n");
-            fdotabs(fp, tabs, tabsize);
-            mGlobalFunctions->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
-            fprintf(fp, "\n");
-        }
+                if (mGlobalFunctions)
+                {
+                    fprintf(asmfp, "GLOBAL FUNCTIONS\n");
+                    fdotabs(asmfp, tabs, tabsize);
+                    mGlobalFunctions->recurse(asmfp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+                    fprintf(asmfp, "\n");
+                }
 
-        fprintf(fp, "STATES\n");
-        fdotabs(fp, tabs, tabsize);
-        mStates->recurse(fp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
-        fprintf(fp, "\n");
+                fprintf(asmfp, "STATES\n");
+                fdotabs(asmfp, tabs, tabsize);
+                mStates->recurse(asmfp, tabs, tabsize, pass, ptype, prunearg, scope, type, basetype, count, chunk, heap, stacksize, entry, entrycount, NULL);
+                fprintf(asmfp, "\n");
+                fclose(asmfp);
+            }
+        }
         break;
     case LSCP_EMIT_BYTE_CODE:
         {

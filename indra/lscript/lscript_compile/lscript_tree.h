@@ -2496,6 +2496,7 @@ public:
     S32 getSize();
 
     void setBytecodeDest(const char* dst_filename);
+    void setAssemblyDest(const char* dst_filename);
 
     void setClassName(const char* class_name);
     const char* getClassName() {return mClassName;}
@@ -2508,6 +2509,7 @@ public:
 
 private:
     std::string mBytecodeDest;
+    std::string mAssemblyDest;
     char mClassName[MAX_STRING];
 };
 
