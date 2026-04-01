@@ -215,7 +215,14 @@ bool lscript_compile(const char* src_filename, const char* dst_filename,
 
             if(dst_filename)
             {
-                gScriptp->setBytecodeDest(dst_filename);
+                if (compile_target == LSCRIPT_TARGET_ASSEMBLY)
+                {
+                    gScriptp->setAssemblyDest(dst_filename);
+                }
+                else
+                {
+                    gScriptp->setBytecodeDest(dst_filename);
+                }
             }
 
             gScriptp->mGodLike = is_god_like;
