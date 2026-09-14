@@ -356,6 +356,7 @@ int yyerror(const char *fmt, ...);
 "ENV_NO_EXPERIENCE_LAND" { count(); yylval.ival = -7; return(INTEGER_CONSTANT); }
 "ENV_NO_EXPERIENCE_PERMISSION" { count(); yylval.ival = -2; return(INTEGER_CONSTANT); }
 "ENV_NO_PERMISSIONS" { count(); yylval.ival = -9; return(INTEGER_CONSTANT); }
+"ENV_OK" { count(); yylval.ival = 1; return(INTEGER_CONSTANT); }
 "ENV_THROTTLE" { count(); yylval.ival = -8; return(INTEGER_CONSTANT); }
 "ENV_VALIDATION_FAIL" { count(); yylval.ival = -6; return(INTEGER_CONSTANT); }
 "EOF" { yylval.sval = new char[4]; strcpy(yylval.sval, "\n\n\n"); return(STRING_CONSTANT); }
@@ -465,6 +466,9 @@ int yyerror(const char *fmt, ...);
 "KFM_REVERSE" { count(); yylval.ival = 3; return(INTEGER_CONSTANT); }
 "KFM_ROTATION" { count(); yylval.ival = 1; return(INTEGER_CONSTANT); }
 "KFM_TRANSLATION" { count(); yylval.ival = 2; return(INTEGER_CONSTANT); }
+"LAND_BRUSH_LARGE" { count(); yylval.ival = 2; return(INTEGER_CONSTANT); }
+"LAND_BRUSH_MEDIUM" { count(); yylval.ival = 1; return(INTEGER_CONSTANT); }
+"LAND_BRUSH_SMALL" { count(); yylval.ival = 0; return(INTEGER_CONSTANT); }
 "LAND_LARGE_BRUSH" { count(); yylval.ival = 3; return(INTEGER_CONSTANT); }
 "LAND_LEVEL" { count(); yylval.ival = 0; return(INTEGER_CONSTANT); }
 "LAND_LOWER" { count(); yylval.ival = 2; return(INTEGER_CONSTANT); }
@@ -529,6 +533,7 @@ int yyerror(const char *fmt, ...);
 "OBJECT_HOVER_HEIGHT" { count(); yylval.ival = 25; return(INTEGER_CONSTANT); }
 "OBJECT_LAST_OWNER_ID" { count(); yylval.ival = 27; return(INTEGER_CONSTANT); }
 "OBJECT_LINK_NUMBER" { count(); yylval.ival = 46; return(INTEGER_CONSTANT); }
+"OBJECT_LOCKED" { count(); yylval.ival = 55; return(INTEGER_CONSTANT); }
 "OBJECT_MASS" { count(); yylval.ival = 43; return(INTEGER_CONSTANT); }
 "OBJECT_MATERIAL" { count(); yylval.ival = 42; return(INTEGER_CONSTANT); }
 "OBJECT_NAME" { count(); yylval.ival = 1; return(INTEGER_CONSTANT); }
@@ -568,6 +573,7 @@ int yyerror(const char *fmt, ...);
 "OBJECT_TOTAL_SCRIPT_COUNT" { count(); yylval.ival = 10; return(INTEGER_CONSTANT); }
 "OBJECT_UNKNOWN_DETAIL" { count(); yylval.ival = -1; return(INTEGER_CONSTANT); }
 "OBJECT_VELOCITY" { count(); yylval.ival = 5; return(INTEGER_CONSTANT); }
+"OBJECT_VOLUME_DETECT" { count(); yylval.ival = 56; return(INTEGER_CONSTANT); }
 "OPT_AVATAR" { count(); yylval.ival = 1; return(INTEGER_CONSTANT); }
 "OPT_CHARACTER" { count(); yylval.ival = 2; return(INTEGER_CONSTANT); }
 "OPT_EXCLUSION_VOLUME" { count(); yylval.ival = 6; return(INTEGER_CONSTANT); }
@@ -984,6 +990,7 @@ int yyerror(const char *fmt, ...);
 "SIT_NO_ACCESS" { count(); yylval.ival = -6; return(INTEGER_CONSTANT); }
 "SIT_NO_EXPERIENCE_PERMISSION" { count(); yylval.ival = -2; return(INTEGER_CONSTANT); }
 "SIT_NO_SIT_TARGET" { count(); yylval.ival = -3; return(INTEGER_CONSTANT); }
+"SIT_OK" { count(); yylval.ival = 1; return(INTEGER_CONSTANT); }
 "SKY_ABSORPTION_CONFIG" { count(); yylval.ival = 16; return(INTEGER_CONSTANT); }
 "SKY_AMBIENT" { count(); yylval.ival = 0; return(INTEGER_CONSTANT); }
 "SKY_BLUE" { count(); yylval.ival = 22; return(INTEGER_CONSTANT); }
@@ -1310,7 +1317,7 @@ bool lscript_compile(const char* src_filename, const char* dst_filename,
                 case LSCRIPT_TARGET_ASSEMBLY:
                     gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_ASSEMBLY, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
                     break;
-                case LSCRIPT_TARGET_CIL_ASSEMBLY:
+                case LSVRIPT_TARGET_CIL_ASSEMBLY:
                     gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_CIL_ASSEMBLY, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
                     break;
                 case LSCRIPT_TARGET_BYTE_CODE:
@@ -1358,6 +1365,7 @@ bool lscript_compile(char *filename, bool compile_to_mono, bool is_god_like)
 {
     return lscript_compile(filename, compile_to_mono?LSCRIPT_TARGET_CIL_ASSEMBLY:LSCRIPT_TARGET_BYTE_CODE, is_god_like);
 }
+
 
 S32 yywrap()
 {
