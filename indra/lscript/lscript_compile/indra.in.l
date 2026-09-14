@@ -248,7 +248,7 @@ bool lscript_compile(const char* src_filename, const char* dst_filename,
                 case LSCRIPT_TARGET_ASSEMBLY:
                     gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_ASSEMBLY, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
                     break;
-                case LSVRIPT_TARGET_CIL_ASSEMBLY:
+                case LSCRIPT_TARGET_CIL_ASSEMBLY:
                     gScriptp->recurse(yyout, 0, 0, LSCP_EMIT_CIL_ASSEMBLY, LSPRUNE_INVALID, b_dummy, NULL, type, type, b_dummy_count, NULL, NULL, 0, NULL, 0, NULL);
                     break;
                 case LSCRIPT_TARGET_BYTE_CODE:
