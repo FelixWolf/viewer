@@ -1,6 +1,6 @@
 /**
 * @file main.cpp
-* @brief Command line compiler for LSL
+* @brief Command line executor for LSL
 *
 * $LicenseInfo:firstyear=2026&license=viewerlgpl$
 * Alchemy Viewer Source Code

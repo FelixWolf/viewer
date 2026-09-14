@@ -49,7 +49,7 @@ LLScriptLibraryFunction::LLScriptLibraryFunction()
 void LLScriptLibrary::init()
 {
     // id, name, return type, parameters, energy, sleep, mono_sleep, gods-only
-    
+
     dangerousAddFunction(6, "llAbs", "i", "i", 10.0f, 0.0f, 0.0f, false);
     dangerousAddFunction(172, "llAcos", "f", "f", 10.0f, 0.0f, 0.0f, false);
     dangerousAddFunction(310, "llAddToLandBanList", nullptr, "kf", 10.0f, 0.1f, 0.1f, false);

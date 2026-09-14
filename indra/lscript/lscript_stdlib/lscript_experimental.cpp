@@ -1,7 +1,6 @@
-
 /**
 * @file library.cpp
-* @brief Non-modifying LSL functions implementations
+* @brief Non-standard LSL functions implementations
 *
 * $LicenseInfo:firstyear=2026&license=viewerlgpl$
 * Kyler "Félix" Eastridge

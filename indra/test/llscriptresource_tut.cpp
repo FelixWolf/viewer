@@ -1,25 +1,25 @@
-/** 
+/**
  * @file llscriptresource_tut.cpp
  * @brief Test LLScriptResource
  *
  * $LicenseInfo:firstyear=2008&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -36,163 +36,163 @@
 class TestConsumer : public LLScriptResourceConsumer
 {
 public:
-	TestConsumer()
-		: mUsedURLs(0)
-	{ }
+    TestConsumer()
+        : mUsedURLs(0)
+    { }
 
-	// LLScriptResourceConsumer interface:
-	S32 getUsedPublicURLs() const
-	{
-		return mUsedURLs;
-	}
+    // LLScriptResourceConsumer interface:
+    S32 getUsedPublicURLs() const
+    {
+        return mUsedURLs;
+    }
 
-	// Test details:
-	S32 mUsedURLs;
+    // Test details:
+    S32 mUsedURLs;
 };
 
 
 namespace tut
 {
-	class LLScriptResourceTestData
-	{
-	};
-	
-	typedef test_group<LLScriptResourceTestData> LLScriptResourceTestGroup;
-	typedef LLScriptResourceTestGroup::object		LLScriptResourceTestObject;
-	LLScriptResourceTestGroup scriptResourceTestGroup("scriptResource");
+    class LLScriptResourceTestData
+    {
+    };
 
-	template<> template<>
-	void LLScriptResourceTestObject::test<1>()
-	{
-		LLScriptResource resource;
-		U32 total = 42;
-		
-		resource.setTotal(total);
-		ensure_equals("Verify set/get total", resource.getTotal(), total);
-		ensure_equals("Verify all resources are initially available",resource.getAvailable(),total);
+    typedef test_group<LLScriptResourceTestData> LLScriptResourceTestGroup;
+    typedef LLScriptResourceTestGroup::object        LLScriptResourceTestObject;
+    LLScriptResourceTestGroup scriptResourceTestGroup("scriptResource");
 
-		// Requesting too many, releasing non-allocated
-		ensure("Request total + 1 resources should fail",!resource.request(total + 1));
-		ensure_equals("Verify all resources available after failed request",resource.getAvailable(),total);
+    template<> template<>
+    void LLScriptResourceTestObject::test<1>()
+    {
+        LLScriptResource resource;
+        U32 total = 42;
 
-		ensure("Releasing resources when none allocated should fail",!resource.release());
-		ensure_equals("All resources should be available after failed release",resource.getAvailable(),total);
+        resource.setTotal(total);
+        ensure_equals("Verify set/get total", resource.getTotal(), total);
+        ensure_equals("Verify all resources are initially available",resource.getAvailable(),total);
 
-		ensure("Request one resource", resource.request());
-		ensure_equals("Verify available resources after successful request",resource.getAvailable(),total - 1);
+        // Requesting too many, releasing non-allocated
+        ensure("Request total + 1 resources should fail",!resource.request(total + 1));
+        ensure_equals("Verify all resources available after failed request",resource.getAvailable(),total);
 
-		// Is this right?  Or should we release all used resources if we try to release more than are currently used?
-		ensure("Release more resources than allocated",!resource.release(2));
-		ensure_equals("Verify resource availability after failed release",resource.getAvailable(),total - 1);
+        ensure("Releasing resources when none allocated should fail",!resource.release());
+        ensure_equals("All resources should be available after failed release",resource.getAvailable(),total);
 
-		ensure("Release a resource",resource.release());
-		ensure_equals("Verify all resources available after successful release",resource.getAvailable(),total);
-	}
+        ensure("Request one resource", resource.request());
+        ensure_equals("Verify available resources after successful request",resource.getAvailable(),total - 1);
+
+        // Is this right?  Or should we release all used resources if we try to release more than are currently used?
+        ensure("Release more resources than allocated",!resource.release(2));
+        ensure_equals("Verify resource availability after failed release",resource.getAvailable(),total - 1);
+
+        ensure("Release a resource",resource.release());
+        ensure_equals("Verify all resources available after successful release",resource.getAvailable(),total);
+    }
 
 
-	template<> template<>
-	void LLScriptResourceTestObject::test<2>()
-	{
-		LLScriptResource resource;
-		U32 total = 42;
+    template<> template<>
+    void LLScriptResourceTestObject::test<2>()
+    {
+        LLScriptResource resource;
+        U32 total = 42;
 
-		resource.setTotal(total);
+        resource.setTotal(total);
 
-		S32 resources_to_request = 30;
-		ensure("Get multiple resources resources",resource.request(resources_to_request));
-		ensure_equals("Verify available resources is correct after request of multiple resources",resource.getAvailable(), total - resources_to_request);
+        S32 resources_to_request = 30;
+        ensure("Get multiple resources resources",resource.request(resources_to_request));
+        ensure_equals("Verify available resources is correct after request of multiple resources",resource.getAvailable(), total - resources_to_request);
 
-		S32 resources_to_release = (resources_to_request / 2);
-		ensure("Release some resources",resource.release(resources_to_release));
+        S32 resources_to_release = (resources_to_request / 2);
+        ensure("Release some resources",resource.release(resources_to_release));
 
-		S32 expected_available = (total - resources_to_request + resources_to_release);
-		ensure_equals("Verify available resources after release of some resources",resource.getAvailable(), expected_available);
+        S32 expected_available = (total - resources_to_request + resources_to_release);
+        ensure_equals("Verify available resources after release of some resources",resource.getAvailable(), expected_available);
 
-		resources_to_release = (resources_to_request - resources_to_release);
-		ensure("Release remaining resources",resource.release(resources_to_release));
+        resources_to_release = (resources_to_request - resources_to_release);
+        ensure("Release remaining resources",resource.release(resources_to_release));
 
-		ensure_equals("Verify available resources after release of remaining resources",resource.getAvailable(), total);
-	}
+        ensure_equals("Verify available resources after release of remaining resources",resource.getAvailable(), total);
+    }
 
-	template<> template<>
-	void LLScriptResourceTestObject::test<3>()
-	{
-		LLScriptResource resource;
+    template<> template<>
+    void LLScriptResourceTestObject::test<3>()
+    {
+        LLScriptResource resource;
 
-		U32 total = 42;
-		resource.setTotal(total);
+        U32 total = 42;
+        resource.setTotal(total);
 
-		ensure("Request all resources",resource.request(total));
+        ensure("Request all resources",resource.request(total));
 
-		U32 low_total = 10;
-		ensure("Release all resources",resource.release(total));
-		ensure_equals("Verify all resources available after releasing",resource.getAvailable(),total);
+        U32 low_total = 10;
+        ensure("Release all resources",resource.release(total));
+        ensure_equals("Verify all resources available after releasing",resource.getAvailable(),total);
 
-		resource.setTotal(low_total);
-		ensure_equals("Verify low total resources are available after set",resource.getAvailable(),low_total);
-	}
-	
+        resource.setTotal(low_total);
+        ensure_equals("Verify low total resources are available after set",resource.getAvailable(),low_total);
+    }
 
-	template<> template<>
-	void LLScriptResourceTestObject::test<4>()
-	{
-		S32 big_resource_total = 100;
-		S32 small_resource_total = 10;
-		LLScriptResourcePool big_pool;
-		big_pool.getPublicURLResource().setTotal(big_resource_total);
-		LLScriptResourcePool small_pool;
-		small_pool.getPublicURLResource().setTotal(small_resource_total);
 
-		TestConsumer consumer;
-		LLScriptResourcePool& initial_pool = consumer.getScriptResourcePool();
-		ensure("Initial resource pool is 'null'.", (&initial_pool == &LLScriptResourcePool::null));
+    template<> template<>
+    void LLScriptResourceTestObject::test<4>()
+    {
+        S32 big_resource_total = 100;
+        S32 small_resource_total = 10;
+        LLScriptResourcePool big_pool;
+        big_pool.getPublicURLResource().setTotal(big_resource_total);
+        LLScriptResourcePool small_pool;
+        small_pool.getPublicURLResource().setTotal(small_resource_total);
 
-		consumer.switchScriptResourcePools(big_pool);
-		LLScriptResourcePool& get_pool = consumer.getScriptResourcePool();
-		ensure("Get resource that was set.", (&big_pool == &get_pool));
+        TestConsumer consumer;
+        LLScriptResourcePool& initial_pool = consumer.getScriptResourcePool();
+        ensure("Initial resource pool is 'null'.", (&initial_pool == &LLScriptResourcePool::null));
 
-		ensure_equals("No public urls in use yet.", consumer.getUsedPublicURLs(),0);
+        consumer.switchScriptResourcePools(big_pool);
+        LLScriptResourcePool& get_pool = consumer.getScriptResourcePool();
+        ensure("Get resource that was set.", (&big_pool == &get_pool));
 
-		S32 request_urls = 5;
-		consumer.mUsedURLs = request_urls;
-		consumer.getScriptResourcePool().getPublicURLResource().request(request_urls);
+        ensure_equals("No public urls in use yet.", consumer.getUsedPublicURLs(),0);
 
-		ensure_equals("Available urls on big_pool is 5 less than total.",
-			big_pool.getPublicURLResource().getAvailable(), big_resource_total - request_urls);
+        S32 request_urls = 5;
+        consumer.mUsedURLs = request_urls;
+        consumer.getScriptResourcePool().getPublicURLResource().request(request_urls);
 
-		ensure("Switching from big pool to small pool",
-			   consumer.switchScriptResourcePools(small_pool));
+        ensure_equals("Available urls on big_pool is 5 less than total.",
+            big_pool.getPublicURLResource().getAvailable(), big_resource_total - request_urls);
 
-		ensure_equals("All resources available to big pool again",
-			big_pool.getPublicURLResource().getAvailable(), big_resource_total);
+        ensure("Switching from big pool to small pool",
+               consumer.switchScriptResourcePools(small_pool));
 
-		ensure_equals("Available urls on small pool is 5 less than total.",
-			small_pool.getPublicURLResource().getAvailable(), small_resource_total - request_urls);
+        ensure_equals("All resources available to big pool again",
+            big_pool.getPublicURLResource().getAvailable(), big_resource_total);
 
-		ensure("Switching from small pool to big pool",
-			   consumer.switchScriptResourcePools(big_pool));
+        ensure_equals("Available urls on small pool is 5 less than total.",
+            small_pool.getPublicURLResource().getAvailable(), small_resource_total - request_urls);
 
-		consumer.getScriptResourcePool().getPublicURLResource().release(request_urls);
+        ensure("Switching from small pool to big pool",
+               consumer.switchScriptResourcePools(big_pool));
 
-		request_urls = 50; // Too many for the small_pool
+        consumer.getScriptResourcePool().getPublicURLResource().release(request_urls);
 
-		consumer.mUsedURLs = request_urls;
-		consumer.getScriptResourcePool().getPublicURLResource().request(request_urls);
+        request_urls = 50; // Too many for the small_pool
 
-		// Verify big pool has them
-		ensure_equals("Available urls on big pool is 50 less than total.",
-			big_pool.getPublicURLResource().getAvailable(), big_resource_total - request_urls);
+        consumer.mUsedURLs = request_urls;
+        consumer.getScriptResourcePool().getPublicURLResource().request(request_urls);
 
-		// Verify can't switch to small_pool
-		ensure("Switching to small pool with too many resources",
-			   !consumer.switchScriptResourcePools(small_pool));
+        // Verify big pool has them
+        ensure_equals("Available urls on big pool is 50 less than total.",
+            big_pool.getPublicURLResource().getAvailable(), big_resource_total - request_urls);
 
-		// Verify big pool still accounting for used resources
-		ensure_equals("Available urls on big_pool is still 50 less than total.",
-			big_pool.getPublicURLResource().getAvailable(), big_resource_total - request_urls);
-		
-		// Verify small pool still has all resources available.
-		ensure_equals("All resources in small pool are still available.",
-			small_pool.getPublicURLResource().getAvailable(), small_resource_total);
-	}
+        // Verify can't switch to small_pool
+        ensure("Switching to small pool with too many resources",
+               !consumer.switchScriptResourcePools(small_pool));
+
+        // Verify big pool still accounting for used resources
+        ensure_equals("Available urls on big_pool is still 50 less than total.",
+            big_pool.getPublicURLResource().getAvailable(), big_resource_total - request_urls);
+
+        // Verify small pool still has all resources available.
+        ensure_equals("All resources in small pool are still available.",
+            small_pool.getPublicURLResource().getAvailable(), small_resource_total);
+    }
 }

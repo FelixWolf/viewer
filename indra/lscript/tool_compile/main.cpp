@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
         {
             char buffer[MAX_STRING];        /*Flawfinder: ignore*/
             std::string line;
-            while(!feof(fp)) 
+            while(!feof(fp))
             {
                 if (fgets(buffer, MAX_STRING, fp) == NULL)
                 {
