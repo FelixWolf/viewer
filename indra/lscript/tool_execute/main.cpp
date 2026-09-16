@@ -56,6 +56,8 @@ private:
         LSLLibrary library(gScriptLibrary);
         library.init();
         gScriptLibrary.assignExec("llSleep", llSleepWrapper);
+        gScriptLibrary.assignExec("llSay", llSayWrapper);
+        gScriptLibrary.assignExec("llOwnerSay", llOwnerSayWrapper);
     }
 
 public:
@@ -64,12 +66,22 @@ public:
         instance().llSleep(retval, args, id);
     }
 
+    static void llSayWrapper(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
+    {
+        std::cout << "[llSay:" << args[0].mInteger << "] " << args[1].mString << std::endl;
+    }
+
+    static void llOwnerSayWrapper(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
+    {
+        std::cout << "[llOwnerSay] " << args[0].mString << std::endl;
+    }
+
     void addScript(const LLUUID &id, LLScriptExecuteLSL2* execute)
     {
         mScripts[id] = execute;
     }
 
-    int runQuanta(F32 maxTime = 1.0f, bool debug = false)
+    int runQuanta(F32 maxTime, bool debug, const char **fault_out)
     {
         if (mScripts.empty())
         {
@@ -88,6 +100,10 @@ public:
             U32 events_processed = 0;
 
             execute->runQuanta(debug, script_pair.first, &error, time_slice, events_processed, timer);
+            if (error != nullptr)
+            {
+                *fault_out = error;
+            }
             ++count;
         }
 
@@ -161,13 +177,22 @@ int main(int argc, char *argv[])
         pool.addScript(LLUUID::generateNewID(), execute);
     }
 
+    bool debug = vm.count("debug") > 0;
+
     LLTimer timer;
     float fps = 1.0 / 450.0;
 
     while(true)
     {
         timer.reset();
-        pool.runQuanta(fps, false);
+
+        const char *fault = nullptr;
+        pool.runQuanta(fps, debug, &fault);
+        if (fault != nullptr)
+        {
+            std::cerr << "Script runtime fault: " << fault << std::endl;
+            return 1;
+        }
 
         F32 elapsedTime = timer.getElapsedTimeF32();
         F32 sleepTime = fps - elapsedTime;
