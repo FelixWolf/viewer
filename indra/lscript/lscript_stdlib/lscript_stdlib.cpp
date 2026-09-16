@@ -38,8 +38,12 @@
 #include <openssl/md5.h>
 #include <openssl/evp.h>
 #include <openssl/hmac.h>
+#include <openssl/pem.h>
+#include <openssl/bio.h>
 #include <algorithm>
+#include <cctype>
 #include <ctime>
+#include <vector>
 
 void llSin(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
 {
@@ -353,7 +357,11 @@ void llAngleBetween(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID
 
     float dotProduct = dot(quatA, quatB);
 
-    retval->mFP = std::acos(2 * dotProduct * dotProduct - 1);
+    // Rounding error can push this fractionally outside [-1, 1], which would
+    // otherwise make acos() return NaN (e.g. for two identical rotations).
+    float cosAngle = llclamp(2 * dotProduct * dotProduct - 1, -1.0f, 1.0f);
+
+    retval->mFP = std::acos(cosAngle);
 }
 
 void llSubStringIndex(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
@@ -628,8 +636,16 @@ void llBase64ToString(LLScriptLibData *retval, LLScriptLibData *args, const LLUU
 {
     retval->mType = LST_STRING;
     std::string decoded = LLBase64::decodeAsString(args[0].mString);
-    decoded.erase(std::remove(decoded.begin(), decoded.end(), '\0'), decoded.end());
-    retval->mString = strdup(decoded.c_str());
+    LLWString wstr = utf8str_to_wstring(decoded);
+    for (llwchar &c : wstr)
+    {
+        if (c == 0)
+        {
+            c = '?';
+        }
+    }
+
+    retval->mString = strdup(wstring_to_utf8str(wstr).c_str());
 }
 
 void llXorBase64Strings(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
@@ -875,8 +891,7 @@ void llSHA1String(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &
 void llGenerateKey(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
 {
     retval->mType = LST_KEY;
-    LLUUID newKey;
-    newKey.generateNewID();
+    LLUUID newKey = LLUUID::generateNewID();
     retval->mKey = strdup(newKey.asString().c_str());
 }
 
@@ -920,8 +935,7 @@ void llChar(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
     int codepoint = args[0].mInteger;
     if (codepoint <= 0 || codepoint > 0x10FFFF)
     {
-        retval->mString = strdup("");
-        return;
+        codepoint = 0xFFFD; // Unicode replacement character
     }
     LLWString wstr(1, static_cast<llwchar>(codepoint));
     retval->mString = strdup(wstring_to_utf8str(wstr).c_str());
@@ -991,14 +1005,160 @@ void llHMAC(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
          reinterpret_cast<const unsigned char*>(message), std::strlen(message),
          hmac, &hmac_len);
 
-    retval->mString = new char[hmac_len * 2 + 1];
-    for (unsigned int i = 0; i < hmac_len; ++i)
-        std::sprintf(retval->mString + i * 2, "%02x", hmac[i]);
-    retval->mString[hmac_len * 2] = '\0';
+    std::string encoded = LLBase64::encode(reinterpret_cast<const U8*>(hmac), hmac_len);
+    retval->mString = strdup(encoded.c_str());
 }
 
-// void llSignRSA(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
-// void llVerifyRSA(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
+// Reformats the PEM section identified by tag (e.g. "RSA PRIVATE KEY") into
+// standard PEM line-wrapped form so OpenSSL's parser accepts it regardless of
+// how the script author whitespace-formatted the key string.
+static bool extractPemSection(const char* input, const char* tag, std::string& out_pem)
+{
+    std::string begin_marker = std::string("-----BEGIN ") + tag + "-----";
+    std::string end_marker   = std::string("-----END ") + tag + "-----";
+
+    std::string str(input);
+    size_t body_start = str.find(begin_marker);
+    if (body_start == std::string::npos)
+        return false;
+    body_start += begin_marker.size();
+
+    size_t body_end = str.find(end_marker, body_start);
+    if (body_end == std::string::npos)
+        return false;
+
+    std::string body = str.substr(body_start, body_end - body_start);
+    body.erase(std::remove_if(body.begin(), body.end(),
+                               [](unsigned char c) { return std::isspace(c) != 0; }),
+               body.end());
+
+    out_pem = begin_marker + "\n";
+    for (size_t i = 0; i < body.size(); i += 64)
+        out_pem += body.substr(i, 64) + "\n";
+    out_pem += end_marker + "\n";
+    return true;
+}
+
+static const EVP_MD* rsaHashAlgorithm(std::string algo)
+{
+    std::transform(algo.begin(), algo.end(), algo.begin(), ::tolower);
+    if      (algo == "sha1")   return EVP_sha1();
+    else if (algo == "sha224") return EVP_sha224();
+    else if (algo == "sha256") return EVP_sha256();
+    else if (algo == "sha384") return EVP_sha384();
+    else if (algo == "sha512") return EVP_sha512();
+    return nullptr;
+}
+
+void llSignRSA(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
+{
+    retval->mType = LST_STRING;
+    retval->mString = strdup("");
+
+    const EVP_MD* evp_md = rsaHashAlgorithm(args[2].mString);
+    if (!evp_md)
+        return;
+
+    std::string pem;
+    if (!extractPemSection(args[0].mString, "RSA PRIVATE KEY", pem))
+        return;
+
+    BIO* bio = BIO_new_mem_buf(pem.data(), static_cast<int>(pem.size()));
+    if (!bio)
+        return;
+    EVP_PKEY* pkey = PEM_read_bio_PrivateKey(bio, nullptr, nullptr, nullptr);
+    BIO_free(bio);
+    if (!pkey)
+        return;
+
+    if (EVP_PKEY_id(pkey) != EVP_PKEY_RSA)
+    {
+        EVP_PKEY_free(pkey);
+        return;
+    }
+
+    const char* message = args[1].mString;
+    size_t msg_len = std::strlen(message);
+
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    if (!ctx)
+    {
+        EVP_PKEY_free(pkey);
+        return;
+    }
+
+    if (EVP_DigestSignInit(ctx, nullptr, evp_md, nullptr, pkey) == 1)
+    {
+        size_t sig_len = 0;
+        if (EVP_DigestSign(ctx, nullptr, &sig_len,
+                            reinterpret_cast<const unsigned char*>(message), msg_len) == 1)
+        {
+            std::vector<unsigned char> sig(sig_len);
+            if (EVP_DigestSign(ctx, sig.data(), &sig_len,
+                                reinterpret_cast<const unsigned char*>(message), msg_len) == 1)
+            {
+                std::string encoded = LLBase64::encode(sig.data(), sig_len);
+                free(retval->mString);
+                retval->mString = strdup(encoded.c_str());
+            }
+        }
+    }
+
+    EVP_MD_CTX_free(ctx);
+    EVP_PKEY_free(pkey);
+}
+
+void llVerifyRSA(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
+{
+    retval->mType = LST_INTEGER;
+    retval->mInteger = 0;
+
+    const EVP_MD* evp_md = rsaHashAlgorithm(args[3].mString);
+    if (!evp_md)
+        return;
+
+    std::string pem;
+    if (!extractPemSection(args[0].mString, "PUBLIC KEY", pem))
+        return;
+
+    BIO* bio = BIO_new_mem_buf(pem.data(), static_cast<int>(pem.size()));
+    if (!bio)
+        return;
+    EVP_PKEY* pkey = PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr);
+    BIO_free(bio);
+    if (!pkey)
+        return;
+
+    if (EVP_PKEY_id(pkey) != EVP_PKEY_RSA)
+    {
+        EVP_PKEY_free(pkey);
+        return;
+    }
+
+    const char* message = args[1].mString;
+    size_t msg_len = std::strlen(message);
+    std::string signature = LLBase64::decodeAsString(args[2].mString);
+
+    EVP_MD_CTX* ctx = EVP_MD_CTX_new();
+    if (!ctx)
+    {
+        EVP_PKEY_free(pkey);
+        return;
+    }
+
+    if (EVP_DigestVerifyInit(ctx, nullptr, evp_md, nullptr, pkey) == 1)
+    {
+        int rc = EVP_DigestVerify(ctx,
+                                   reinterpret_cast<const unsigned char*>(signature.data()), signature.size(),
+                                   reinterpret_cast<const unsigned char*>(message), msg_len);
+        if (rc == 1)
+            retval->mInteger = 1;
+    }
+
+    EVP_MD_CTX_free(ctx);
+    EVP_PKEY_free(pkey);
+}
+
 // void llReplaceSubString(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
 
 void llComputeHash(LLScriptLibData *retval, LLScriptLibData *args, const LLUUID &id)
@@ -1216,8 +1376,8 @@ void LSLLibrary::init()
     mLibrary.assignExec("llHash", llHash);
     mLibrary.assignExec("llSHA256String", llSHA256String);
     mLibrary.assignExec("llHMAC", llHMAC);
-    // mLibrary.assignExec("llSignRSA", llSignRSA);
-    // mLibrary.assignExec("llVerifyRSA", llVerifyRSA);
+    mLibrary.assignExec("llSignRSA", llSignRSA);
+    mLibrary.assignExec("llVerifyRSA", llVerifyRSA);
     // mLibrary.assignExec("llReplaceSubString", llReplaceSubString);
     mLibrary.assignExec("llComputeHash", llComputeHash);
     // mLibrary.assignExec("llGetStartString", llGetStartString);
